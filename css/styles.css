@@ -1,0 +1,83 @@
+:root {
+  --bg-color: #666;
+  --logo-txt-color: #fff;
+  --label-color: #f2f2f2;
+  --label-txt-color: #121212;
+  --main-color: #8f0000;
+  --like-color: #82edb0;
+  --dislike-color: #fa7f7f;
+  --button-color: #333;
+  --button-clicked-color: #cbcbcb;
+  --shadow: 0 4px 4px 0 rgb(0, 0, 0, 0.5);
+}
+
+button,
+a {
+  cursor: pointer;
+}
+
+/** Utility */
+.drop-shadow {
+  box-shadow: var(--shadow);
+}
+
+.inner-shadow {
+  box-shadow: var(--shadow) inset;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+/** Content */
+
+body {
+  background: var(--bg-color);
+}
+
+header {
+  background: var(--main-color);
+  color: var(--logo-txt-color);
+  height: 4rem;
+}
+
+header h1 {
+  font-size: 1.5rem;
+}
+
+.label-block,
+button {
+  background: var(--label-color);
+  border-radius: 5px;
+  width: 100%;
+}
+
+.label-block {
+  font-stretch: condensed;
+  font-size: 1.5rem;
+}
+
+button {
+  color: var(--logo-txt-color);
+  background: var(--button-color);
+  font-weight: bold;
+  text-align: center;
+  padding: 0.75rem 0;
+}
+
+button:active {
+  color: var(--button-color);
+  background: var(--button-clicked-color);
+  box-shadow: var(--shadow) inset;
+}
+
+.new-card-button {
+  font-size: 2rem;
+  width: 80%;
+}
+
+img {
+  width: 90%;
+  object-fit: contain;
+  aspect-ratio: 1;
+}

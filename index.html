@@ -5,16 +5,51 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>AJAX Project</title>
   <link rel="icon" href="images/favicon.ico">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&family=Saira:wght@200;400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/styles.css">
+
+  <script defer src="js/data.js"></script>
+  <script defer src="js/main.js"></script>
 </head>
 <body>
-  <header>
+
+  <header class="drop-shadow">
+    <div class="container full-height">
+      <div class="row full-height align-center">
+        <h1 class="logo">YGO Like or Strike</h1>
+      </div>
+    </div>
   </header>
+
   <main>
+    <div class="container">
+      <div class="row pad-y-sm">
+        <div class="card-display text-align-center column-full">
+          <div class="row justify-center">
+            <div class="label-block drop-shadow">
+              <h2 id="card-title">Card Title</h2>
+            </div>
+          </div>
+          <div class="row pad-y-med justify-center">
+            <div class="image-container">
+              <img id="card-image" src="images/placeholder.png">
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row justify-center">
+        <button class="new-card-button drop-shadow">
+          New Card
+        </button>
+      </div>
+    </div>
   </main>
-  <script src="js/data.js"></script>
-  <script src="js/main.js"></script>
 </body>
 </html>
