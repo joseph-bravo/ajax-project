@@ -97,7 +97,7 @@ button {
 
 .loading > *,
 button:disabled {
-  filter: brightness(0.5);
+  filter: brightness(0.75);
   cursor: default;
 }
 
@@ -137,6 +137,15 @@ img {
   aspect-ratio: 1;
 }
 
-#card-image {
+.image-container {
   width: clamp(0px, 80%, 400px);
+  height: fit-content;
+}
+
+.liked .label-block {
+  background-color: var(--like-color);
+}
+
+.disliked .label-block {
+  background-color: var(--dislike-color);
 }

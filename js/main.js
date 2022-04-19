@@ -13,6 +13,7 @@ var currentlyLoading = false;
 var $main = document.querySelector('main');
 var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
+var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
 var $buttonNewCard = document.querySelector('.new-card-button');
 var $likeButton = document.querySelector('.like-button');
@@ -41,13 +42,16 @@ function setLoading(bool) {
 }
 
 //* Change displayed card
-function displayCard(card) {
-
+function displayCard(card, animation) {
   setLoading(true);
+  setAnimation($imageContainer, animation);
 
-  //* Cancel Animations
-  $imageContainer.classList.remove('animate__zoomIn');
-  $imageContainer.classList.add('animate__bounceOutRight');
+  if (remainingCards.length < 1) {
+    $main.classList.remove('loading');
+    $mainCardTitle.textContent = 'No More Cards!!!';
+    $remainingCards.textContent = remainingCards.length;
+    return;
+  }
 
   var croppedImageUrl =
   'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
@@ -56,12 +60,9 @@ function displayCard(card) {
   $mainCardImage.src = croppedImageUrl;
 
   $mainCardImage.addEventListener('load', function () {
-
     setLoading(false);
 
-    //* Cancel Animations
-    $imageContainer.classList.remove('animate__bounceOutRight', 'hide');
-    $imageContainer.classList.add('animate__zoomIn');
+    setAnimation($imageContainer, '👀');
 
     $mainCardTitle.textContent = card.name;
     $remainingCards.textContent = remainingCards.length;
@@ -69,24 +70,66 @@ function displayCard(card) {
 }
 
 // * Animation Handler
-function imageContainerAnimationHandler(event) {
-  if (event.target.classList.contains('animate__bounceOutRight')) {
-    event.target.classList.add('hide');
-    event.target.classList.remove('animate__bounceOutRight');
-  } else {
-    event.target.classList.remove('animate__zoomIn');
+var motions = {
+  discardCard: 'animate__zoomOut',
+  likeCard: 'animate__backOutRight',
+  dislikeCard: 'animate__backOutLeft',
+  displayCard: 'animate__zoomIn'
+};
+
+function clearAnimations(target) {
+  target.classList.remove('hide');
+  for (var m in motions) {
+    target.classList.remove(motions[m]);
   }
 }
-$imageContainer.addEventListener('animationend', imageContainerAnimationHandler);
+
+function setAnimation(target, animation) {
+  clearAnimations(target);
+  var animationToSet;
+  switch (animation) {
+    case '👍':
+      $mainCardDisplay.classList.add('liked');
+      animationToSet = motions.likeCard;
+      break;
+    case '👎':
+      $mainCardDisplay.classList.add('disliked');
+      animationToSet = motions.dislikeCard;
+      break;
+    case '📂':
+      animationToSet = motions.discardCard;
+      break;
+    case '👀':
+      $mainCardDisplay.classList.remove('liked', 'disliked');
+      animationToSet = motions.displayCard;
+      break;
+
+  }
+  target.classList.add(animationToSet);
+}
+
+function animationEndHandler(event) {
+  if (!event.target.classList.contains('animate__zoomIn')) {
+    event.target.classList.add('hide');
+  }
+  for (var m in motions) {
+    event.target.classList.remove(motions[m]);
+  }
+}
+$imageContainer.addEventListener('animationend', animationEndHandler);
 
 //* New Card button.
-function drawNewCard() {
-  if (!currentlyLoading) {
-    currentCard = _.sample(remainingCards);
-    displayCard(currentCard);
+function drawNewCard(action) {
+  if (currentlyLoading) {
+    return;
   }
+  currentCard = _.sample(remainingCards);
+  displayCard(currentCard, action);
 }
-$buttonNewCard.addEventListener('click', drawNewCard);
+
+$buttonNewCard.addEventListener('click', function () {
+  drawNewCard('📂');
+});
 window.addEventListener('keydown', function (event) {
   if (event.key === ' ') {
     $buttonNewCard.click();
@@ -113,7 +156,7 @@ function rateCard(event) {
     userCards.push(currentCard);
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
-    drawNewCard();
+    drawNewCard(currentCard.rating);
   }
 }
 $ratingButtons.addEventListener('click', rateCard);
