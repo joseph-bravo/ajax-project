@@ -1,0 +1,13 @@
+* {
+  font-family: Saira, sans-serif;
+  font-weight: normal;
+}
+
+h1 {
+  font-family: "Reem Kufi", sans-serif;
+  font-weight: bold;
+}
+
+button {
+  all: unset;
+}
