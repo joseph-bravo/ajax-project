@@ -67,11 +67,20 @@ h2 {
 }
 
 button {
+  display: block;
   color: var(--logo-txt-color);
   background: var(--button-color);
   font-weight: bold;
   text-align: center;
   padding: 0.75rem 0;
+  box-shadow: var(--shadow);
+}
+
+.rating-buttons button {
+  border-radius: 50px;
+  width: 150px;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 
 button:disabled {
@@ -87,6 +96,22 @@ button:enabled:active {
 .new-card-button {
   font-size: 2rem;
   width: clamp(0px, 80%, 400px);
+}
+
+.like-button i {
+  color: var(--like-color);
+}
+
+.dislike-button i {
+  color: var(--dislike-color);
+}
+
+.rating-buttons button i {
+  font-size: 3.5rem;
+}
+
+.rating-buttons button:active i {
+  filter: brightness(50%);
 }
 
 img {
