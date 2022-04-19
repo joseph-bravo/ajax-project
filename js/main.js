@@ -1,5 +1,7 @@
-/* global cardData */
 /* global userData */
+/* global Rating */
+/* global remainingCards */
+/* global userCards */
 /* global _ */
 
 // ! utility
@@ -8,25 +10,44 @@
 var currentCard = {};
 var currentlyLoading = false;
 
+var $main = document.querySelector('main');
 var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
-var $titleBlock = document.querySelector('.label-block');
-var $image = document.querySelector('#card-image');
 var $imageContainer = document.querySelector('.image-container');
+var $buttonNewCard = document.querySelector('.new-card-button');
+var $likeButton = document.querySelector('.like-button');
+var $dislikeButton = document.querySelector('.dislike-button');
+var $remainingCards = document.querySelector('#remaining-cards');
+
+//* Change loading state
+function setLoading(bool) {
+  if (bool) {
+    currentlyLoading = true;
+
+    $buttonNewCard.disabled = true;
+    $likeButton.disabled = true;
+    $dislikeButton.disabled = true;
+
+    $main.classList.add('loading');
+  } else {
+    currentlyLoading = false;
+
+    $buttonNewCard.disabled = false;
+    $likeButton.disabled = false;
+    $dislikeButton.disabled = false;
+
+    $main.classList.remove('loading');
+  }
+}
 
 //* Change displayed card
 function displayCard(card) {
 
-  currentlyLoading = true;
+  setLoading(true);
 
   //* Cancel Animations
   $imageContainer.classList.remove('animate__zoomIn');
   $imageContainer.classList.add('animate__bounceOutRight');
-
-  $buttonNewCard.disabled = true;
-  $buttonNewCard.classList.add('loading');
-  $titleBlock.classList.add('loading');
-  $image.classList.add('loading');
 
   var croppedImageUrl =
   'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
@@ -36,18 +57,14 @@ function displayCard(card) {
 
   $mainCardImage.addEventListener('load', function () {
 
-    currentlyLoading = false;
+    setLoading(false);
 
     //* Cancel Animations
     $imageContainer.classList.remove('animate__bounceOutRight', 'hide');
     $imageContainer.classList.add('animate__zoomIn');
 
-    $buttonNewCard.disabled = false;
-    $buttonNewCard.classList.remove('loading');
-    $titleBlock.classList.remove('loading');
-    $image.classList.remove('loading');
-
     $mainCardTitle.textContent = card.name;
+    $remainingCards.textContent = remainingCards.length;
   });
 }
 
@@ -65,11 +82,10 @@ $imageContainer.addEventListener('animationend', imageContainerAnimationHandler)
 //* New Card button.
 function drawNewCard() {
   if (!currentlyLoading) {
-    currentCard = _.sample(cardData);
+    currentCard = _.sample(remainingCards);
     displayCard(currentCard);
   }
 }
-var $buttonNewCard = document.querySelector('.new-card-button');
 $buttonNewCard.addEventListener('click', drawNewCard);
 window.addEventListener('keydown', function (event) {
   if (event.key === ' ') {
@@ -80,18 +96,23 @@ window.addEventListener('keydown', function (event) {
 //* Like/Dislike buttons
 var $ratingButtons = document.querySelector('.rating-buttons');
 function rateCard(event) {
+  if (currentlyLoading) {
+    return;
+  }
   if (event.target.matches('button, button *')) {
-    var cardToPush = currentCard;
     var action = event.target.closest('button');
-    console.log('action:', action);
+    var rating;
     if (action.matches('.like-button')) {
-      cardToPush.rating = 'like';
+      rating = new Rating(currentCard.id, '👍');
+      currentCard.rating = '👍';
     } else if (action.matches('.dislike-button')) {
-      cardToPush.rating = 'dislike';
+      rating = new Rating(currentCard.id, '👎');
+      currentCard.rating = '👎';
     }
-    userData.rated.push(cardToPush);
-    console.log('pushed:', cardToPush);
-    console.log('userData:', userData);
+    userData.ratings.push(rating);
+    userCards.push(currentCard);
+    var indexOfRatedCard = remainingCards.indexOf(currentCard);
+    remainingCards.splice(indexOfRatedCard, 1);
     drawNewCard();
   }
 }
@@ -100,7 +121,6 @@ $ratingButtons.addEventListener('click', rateCard);
 //! Site Initialization
 
 /* exported initializeSite */
-var $main = document.querySelector('main');
 function initializeSite() {
   $main.classList.remove('hidden');
   drawNewCard();

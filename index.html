@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
   <link
   rel="stylesheet"
   crossorigin="anonymous"
@@ -60,10 +60,22 @@
         </button>
       </div>
       <div class="row pad-y-sm justify-center">
-        <button class="new-card-button drop-shadow loading">
-          New Card
-        </button>
+        <div class="column-full">
+          <div class="row justify-center">
+            <button class="new-card-button drop-shadow">
+              New Card
+            </button>
+          </div>
+          <div class="row justify-center pad-top-sm">
+            <div class="label-block remaining-cards-block text-align-center drop-shadow">
+              <h3>
+                Remaining Cards: <span id="remaining-cards">0</span>
+              </h3>
+            </div>
+          </div>
+        </div>
       </div>
+
     </div>
   </main>
 </body>

@@ -62,9 +62,21 @@ button {
   max-width: 600px;
 }
 
+.remaining-cards-block {
+  font-weight: bold;
+  max-width: 350px;
+}
+
 h2 {
   font-stretch: 66%;
 }
+
+h3,
+h3 * {
+  font-stretch: semi-condensed;
+}
+
+/** buttons */
 
 button {
   display: block;
@@ -83,7 +95,9 @@ button {
   padding-bottom: 1.25rem;
 }
 
+.loading > *,
 button:disabled {
+  filter: brightness(0.5);
   cursor: default;
 }
 
@@ -110,9 +124,11 @@ button:enabled:active {
   font-size: 3.5rem;
 }
 
-.rating-buttons button:active i {
+.rating-buttons button:enabled:active i {
   filter: brightness(50%);
 }
+
+/** images */
 
 img {
   box-shadow: var(--shadow);
@@ -123,8 +139,4 @@ img {
 
 #card-image {
   width: clamp(0px, 80%, 400px);
-}
-
-.loading {
-  filter: brightness(0.5);
 }
