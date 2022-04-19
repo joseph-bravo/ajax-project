@@ -1,6 +1,7 @@
 /* exported data */
 /* exported cardData */
 /* global initializeSite */
+
 var cardData = {};
 
 function pullAllCardData() {
@@ -18,3 +19,23 @@ function pullAllCardData() {
 }
 
 pullAllCardData();
+
+var userData = {
+  rated: [],
+  load: function () {
+    var dataLocal = localStorage.getItem('userDataYGOLOS');
+    if (dataLocal) {
+      for (var prop in dataLocal) {
+        userData[prop] = dataLocal[prop];
+      }
+      userData = JSON.parse(dataLocal);
+    }
+  },
+  save: function () {
+    var storingData = JSON.stringify(userData);
+    localStorage.setItem('userDataYGOLOS', storingData);
+  }
+};
+
+userData.load();
+// window.addEventListener('unload', userData.save);

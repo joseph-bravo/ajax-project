@@ -1,9 +1,11 @@
 /* global cardData */
+/* global userData */
 /* global _ */
 
 // ! utility
 
 // ! main
+var currentCard = {};
 var currentlyLoading = false;
 
 var $mainCardTitle = document.querySelector('#card-title');
@@ -12,6 +14,7 @@ var $titleBlock = document.querySelector('.label-block');
 var $image = document.querySelector('#card-image');
 var $imageContainer = document.querySelector('.image-container');
 
+//* Change displayed card
 function displayCard(card) {
 
   currentlyLoading = true;
@@ -59,13 +62,13 @@ function imageContainerAnimationHandler(event) {
 }
 $imageContainer.addEventListener('animationend', imageContainerAnimationHandler);
 
+//* New Card button.
 function drawNewCard() {
   if (!currentlyLoading) {
-    var output = _.sample(cardData);
-    displayCard(output);
+    currentCard = _.sample(cardData);
+    displayCard(currentCard);
   }
 }
-
 var $buttonNewCard = document.querySelector('.new-card-button');
 $buttonNewCard.addEventListener('click', drawNewCard);
 window.addEventListener('keydown', function (event) {
@@ -73,6 +76,28 @@ window.addEventListener('keydown', function (event) {
     $buttonNewCard.click();
   }
 });
+
+//* Like/Dislike buttons
+var $ratingButtons = document.querySelector('.rating-buttons');
+function rateCard(event) {
+  if (event.target.matches('button, button *')) {
+    var cardToPush = currentCard;
+    var action = event.target.closest('button');
+    console.log('action:', action);
+    if (action.matches('.like-button')) {
+      cardToPush.rating = 'like';
+    } else if (action.matches('.dislike-button')) {
+      cardToPush.rating = 'dislike';
+    }
+    userData.rated.push(cardToPush);
+    console.log('pushed:', cardToPush);
+    console.log('userData:', userData);
+    drawNewCard();
+  }
+}
+$ratingButtons.addEventListener('click', rateCard);
+
+//! Site Initialization
 
 /* exported initializeSite */
 var $main = document.querySelector('main');

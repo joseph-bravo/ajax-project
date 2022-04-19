@@ -126,6 +126,5 @@ img {
 }
 
 .loading {
-  transform: scale(0.9);
-  filter: blur(1px) brightness(0.5);
+  filter: brightness(0.5);
 }
