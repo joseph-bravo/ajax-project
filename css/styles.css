@@ -62,19 +62,42 @@ button {
   max-width: 600px;
 }
 
+.remaining-cards-block {
+  font-weight: bold;
+  max-width: 350px;
+}
+
 h2 {
   font-stretch: 66%;
 }
 
+h3,
+h3 * {
+  font-stretch: semi-condensed;
+}
+
+/** buttons */
+
 button {
+  display: block;
   color: var(--logo-txt-color);
   background: var(--button-color);
   font-weight: bold;
   text-align: center;
   padding: 0.75rem 0;
+  box-shadow: var(--shadow);
 }
 
+.rating-buttons button {
+  border-radius: 50px;
+  width: 150px;
+  padding-top: 1.25rem;
+  padding-bottom: 1.25rem;
+}
+
+.loading > *,
 button:disabled {
+  filter: brightness(0.75);
   cursor: default;
 }
 
@@ -89,6 +112,24 @@ button:enabled:active {
   width: clamp(0px, 80%, 400px);
 }
 
+.like-button i {
+  color: var(--like-color);
+}
+
+.dislike-button i {
+  color: var(--dislike-color);
+}
+
+.rating-buttons button i {
+  font-size: 3.5rem;
+}
+
+.rating-buttons button:enabled:active i {
+  filter: brightness(50%);
+}
+
+/** images */
+
 img {
   box-shadow: var(--shadow);
   max-width: 100%;
@@ -96,11 +137,15 @@ img {
   aspect-ratio: 1;
 }
 
-#card-image {
+.image-container {
   width: clamp(0px, 80%, 400px);
+  height: fit-content;
 }
 
-.loading {
-  transform: scale(0.9);
-  filter: blur(1px) brightness(0.5);
+.liked .label-block {
+  background-color: var(--like-color);
+}
+
+.disliked .label-block {
+  background-color: var(--dislike-color);
 }

@@ -8,13 +8,18 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
+  <link
+  rel="stylesheet"
+  crossorigin="anonymous"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css"
+  integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/styles.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
   <script defer src="js/data.js"></script>
@@ -40,17 +45,37 @@
             </div>
           </div>
           <div class="row pad-y-med justify-center">
-            <div class="image-container animate__animated animate__fast">
+            <div class="image-container animate__animated animate__faster">
               <img id="card-image" src="images/placeholder.png">
             </div>
           </div>
         </div>
       </div>
-      <div class="row justify-center">
-        <button class="new-card-button drop-shadow loading">
-          New Card
+      <div class="row justify-center rating-buttons gap-x-sm">
+        <button class="dislike-button">
+          <i class="fas fa-heart-broken"></i>
+        </button>
+        <button class="like-button">
+          <i class="fas fa-heart"></i>
         </button>
       </div>
+      <div class="row pad-y-sm justify-center">
+        <div class="column-full">
+          <div class="row justify-center">
+            <button class="new-card-button drop-shadow">
+              New Card
+            </button>
+          </div>
+          <div class="row justify-center pad-top-sm">
+            <div class="label-block remaining-cards-block text-align-center drop-shadow">
+              <h3>
+                Remaining Cards: <span id="remaining-cards">0</span>
+              </h3>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </body>

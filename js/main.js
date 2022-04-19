@@ -1,29 +1,57 @@
-/* global cardData */
+/* global userData */
+/* global Rating */
+/* global remainingCards */
+/* global userCards */
 /* global _ */
 
 // ! utility
 
 // ! main
+var currentCard = {};
 var currentlyLoading = false;
 
+var $main = document.querySelector('main');
 var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
-var $titleBlock = document.querySelector('.label-block');
-var $image = document.querySelector('#card-image');
+var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
+var $buttonNewCard = document.querySelector('.new-card-button');
+var $likeButton = document.querySelector('.like-button');
+var $dislikeButton = document.querySelector('.dislike-button');
+var $remainingCards = document.querySelector('#remaining-cards');
 
-function displayCard(card) {
+//* Change loading state
+function setLoading(bool) {
+  if (bool) {
+    currentlyLoading = true;
 
-  currentlyLoading = true;
+    $buttonNewCard.disabled = true;
+    $likeButton.disabled = true;
+    $dislikeButton.disabled = true;
 
-  //* Cancel Animations
-  $imageContainer.classList.remove('animate__zoomIn');
-  $imageContainer.classList.add('animate__bounceOutRight');
+    $main.classList.add('loading');
+  } else {
+    currentlyLoading = false;
 
-  $buttonNewCard.disabled = true;
-  $buttonNewCard.classList.add('loading');
-  $titleBlock.classList.add('loading');
-  $image.classList.add('loading');
+    $buttonNewCard.disabled = false;
+    $likeButton.disabled = false;
+    $dislikeButton.disabled = false;
+
+    $main.classList.remove('loading');
+  }
+}
+
+//* Change displayed card
+function displayCard(card, animation) {
+  setLoading(true);
+  setAnimation($imageContainer, animation);
+
+  if (remainingCards.length < 1) {
+    $main.classList.remove('loading');
+    $mainCardTitle.textContent = 'No More Cards!!!';
+    $remainingCards.textContent = remainingCards.length;
+    return;
+  }
 
   var croppedImageUrl =
   'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
@@ -32,50 +60,110 @@ function displayCard(card) {
   $mainCardImage.src = croppedImageUrl;
 
   $mainCardImage.addEventListener('load', function () {
+    setLoading(false);
 
-    currentlyLoading = false;
-
-    //* Cancel Animations
-    $imageContainer.classList.remove('animate__bounceOutRight', 'hide');
-    $imageContainer.classList.add('animate__zoomIn');
-
-    $buttonNewCard.disabled = false;
-    $buttonNewCard.classList.remove('loading');
-    $titleBlock.classList.remove('loading');
-    $image.classList.remove('loading');
+    setAnimation($imageContainer, 'view');
 
     $mainCardTitle.textContent = card.name;
+    $remainingCards.textContent = remainingCards.length;
   });
 }
 
 // * Animation Handler
-function imageContainerAnimationHandler(event) {
-  if (event.target.classList.contains('animate__bounceOutRight')) {
+var motions = {
+  discardCard: 'animate__zoomOut',
+  likeCard: 'animate__backOutRight',
+  dislikeCard: 'animate__backOutLeft',
+  displayCard: 'animate__zoomIn'
+};
+
+function clearAnimations(target) {
+  target.classList.remove('hide');
+  for (var m in motions) {
+    target.classList.remove(motions[m]);
+  }
+}
+
+function setAnimation(target, animation) {
+  clearAnimations(target);
+  var animationToSet;
+  switch (animation) {
+    case '👍':
+      $mainCardDisplay.classList.add('liked');
+      animationToSet = motions.likeCard;
+      break;
+    case '👎':
+      $mainCardDisplay.classList.add('disliked');
+      animationToSet = motions.dislikeCard;
+      break;
+    case 'discard':
+      animationToSet = motions.discardCard;
+      break;
+    case 'view':
+      $mainCardDisplay.classList.remove('liked', 'disliked');
+      animationToSet = motions.displayCard;
+      break;
+
+  }
+  target.classList.add(animationToSet);
+}
+
+function animationEndHandler(event) {
+  if (!event.target.classList.contains('animate__zoomIn')) {
     event.target.classList.add('hide');
-    event.target.classList.remove('animate__bounceOutRight');
-  } else {
-    event.target.classList.remove('animate__zoomIn');
+  }
+  for (var m in motions) {
+    event.target.classList.remove(motions[m]);
   }
 }
-$imageContainer.addEventListener('animationend', imageContainerAnimationHandler);
+$imageContainer.addEventListener('animationend', animationEndHandler);
 
-function drawNewCard() {
-  if (!currentlyLoading) {
-    var output = _.sample(cardData);
-    displayCard(output);
+//* New Card button.
+function drawNewCard(action) {
+  if (currentlyLoading) {
+    return;
   }
+  currentCard = _.sample(remainingCards);
+  displayCard(currentCard, action);
 }
 
-var $buttonNewCard = document.querySelector('.new-card-button');
-$buttonNewCard.addEventListener('click', drawNewCard);
+$buttonNewCard.addEventListener('click', function () {
+  drawNewCard('discard');
+});
 window.addEventListener('keydown', function (event) {
   if (event.key === ' ') {
     $buttonNewCard.click();
   }
 });
 
+//* Like/Dislike buttons
+var $ratingButtons = document.querySelector('.rating-buttons');
+function rateCard(event) {
+  if (currentlyLoading) {
+    return;
+  }
+  if (event.target.matches('button, button *')) {
+    var action = event.target.closest('button');
+    var rating;
+    if (action.matches('.like-button')) {
+      rating = new Rating(currentCard.id, '👍');
+      currentCard.rating = '👍';
+    } else if (action.matches('.dislike-button')) {
+      rating = new Rating(currentCard.id, '👎');
+      currentCard.rating = '👎';
+    }
+    userData.ratings.push(rating);
+    userCards.push(currentCard);
+    var indexOfRatedCard = remainingCards.indexOf(currentCard);
+    remainingCards.splice(indexOfRatedCard, 1);
+    drawNewCard(currentCard.rating);
+  }
+}
+$ratingButtons.addEventListener('click', rateCard);
+
+//! Site Initialization
+
 /* exported initializeSite */
-var $main = document.querySelector('main');
 function initializeSite() {
   $main.classList.remove('hidden');
   drawNewCard();
