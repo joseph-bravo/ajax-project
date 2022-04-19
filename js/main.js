@@ -62,7 +62,7 @@ function displayCard(card, animation) {
   $mainCardImage.addEventListener('load', function () {
     setLoading(false);
 
-    setAnimation($imageContainer, '👀');
+    setAnimation($imageContainer, 'view');
 
     $mainCardTitle.textContent = card.name;
     $remainingCards.textContent = remainingCards.length;
@@ -96,10 +96,10 @@ function setAnimation(target, animation) {
       $mainCardDisplay.classList.add('disliked');
       animationToSet = motions.dislikeCard;
       break;
-    case '📂':
+    case 'discard':
       animationToSet = motions.discardCard;
       break;
-    case '👀':
+    case 'view':
       $mainCardDisplay.classList.remove('liked', 'disliked');
       animationToSet = motions.displayCard;
       break;
@@ -128,7 +128,7 @@ function drawNewCard(action) {
 }
 
 $buttonNewCard.addEventListener('click', function () {
-  drawNewCard('📂');
+  drawNewCard('discard');
 });
 window.addEventListener('keydown', function (event) {
   if (event.key === ' ') {
