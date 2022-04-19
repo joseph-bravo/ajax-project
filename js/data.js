@@ -1,4 +1,6 @@
 /* exported data */
+/* exported cardData */
+/* global initializeSite */
 var cardData = {};
 
 function pullAllCardData() {
@@ -10,8 +12,8 @@ function pullAllCardData() {
   cardXHR.responseType = 'json';
   cardXHR.send();
   cardXHR.addEventListener('load', function () {
-    cardData = cardXHR.response;
-    console.log(cardData);
+    cardData = cardXHR.response.data;
+    initializeSite();
   });
 }
 

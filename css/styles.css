@@ -41,7 +41,11 @@ header {
   height: 4rem;
 }
 
-header h1 {
+main {
+  overflow: hidden;
+}
+
+.logo {
   font-size: 1.5rem;
 }
 
@@ -53,8 +57,13 @@ button {
 }
 
 .label-block {
-  font-stretch: condensed;
+  font-stretch: extra-condensed;
   font-size: 1.5rem;
+  max-width: 600px;
+}
+
+h2 {
+  font-stretch: 66%;
 }
 
 button {
@@ -65,7 +74,11 @@ button {
   padding: 0.75rem 0;
 }
 
-button:active {
+button:disabled {
+  cursor: default;
+}
+
+button:enabled:active {
   color: var(--button-color);
   background: var(--button-clicked-color);
   box-shadow: var(--shadow) inset;
@@ -73,11 +86,21 @@ button:active {
 
 .new-card-button {
   font-size: 2rem;
-  width: 80%;
+  width: clamp(0px, 80%, 400px);
 }
 
 img {
-  width: 90%;
-  object-fit: contain;
+  box-shadow: var(--shadow);
+  max-width: 100%;
+  object-fit: cover;
   aspect-ratio: 1;
+}
+
+#card-image {
+  width: clamp(0px, 80%, 400px);
+}
+
+.loading {
+  transform: scale(0.9);
+  filter: blur(1px) brightness(0.5);
 }

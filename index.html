@@ -8,13 +8,15 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;700&family=Saira:wght@200;400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/fonts.css">
   <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
   <script defer src="js/data.js"></script>
   <script defer src="js/main.js"></script>
 </head>
@@ -28,24 +30,24 @@
     </div>
   </header>
 
-  <main>
+  <main class="hidden">
     <div class="container">
-      <div class="row pad-y-sm">
+      <div class="row pad-top-sm">
         <div class="card-display text-align-center column-full">
           <div class="row justify-center">
-            <div class="label-block drop-shadow">
+            <div class="label-block drop-shadow loading">
               <h2 id="card-title">Card Title</h2>
             </div>
           </div>
           <div class="row pad-y-med justify-center">
-            <div class="image-container">
+            <div class="image-container animate__animated animate__fast">
               <img id="card-image" src="images/placeholder.png">
             </div>
           </div>
         </div>
       </div>
       <div class="row justify-center">
-        <button class="new-card-button drop-shadow">
+        <button class="new-card-button drop-shadow loading">
           New Card
         </button>
       </div>
