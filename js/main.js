@@ -2,12 +2,13 @@
 /* global Rating */
 /* global remainingCards */
 /* global userCards */
+/* global userCardSort */
 /* global domUtils */
 /* global _ */
 
 // ! main
 var currentCard = {};
-var currentlyLoading = false;
+var currentlyLoading = true;
 
 var $main = document.querySelector('main');
 var $mainCardTitle = document.querySelector('#card-title');
@@ -154,14 +155,14 @@ $imageContainer.addEventListener('animationend', animationEndHandler);
 
 //* New Card button.
 function drawNewCard(action) {
-  if (currentlyLoading) {
-    return;
-  }
   currentCard = _.sample(remainingCards);
   displayCard(currentCard, action);
 }
 
 $newCardButton.addEventListener('click', function () {
+  if (currentlyLoading) {
+    return;
+  }
   drawNewCard('discard');
 });
 
@@ -181,6 +182,7 @@ function rateCard(event) {
       rating = new Rating(currentCard.id, '👎');
       currentCard.rating = '👎';
     }
+    currentCard.timeRated = Date.now();
     userData.ratings.unshift(rating);
     userCards.unshift(currentCard);
     prependToResultsView(currentCard);
@@ -289,6 +291,27 @@ function redrawResultsView() {
   });
 }
 
+function resultsShowOnly(filter) {
+  var toShow = userCardSort.filter(filter);
+  userCards.forEach(function (element) {
+    if (toShow.includes(element)) {
+      element.domElement.classList.remove('hidden');
+    } else {
+      element.domElement.classList.add('hidden');
+    }
+  });
+}
+
+function resultsOrder(direction) {
+  var sortOrder = userCardSort.recent();
+  if (direction === 'reverse') {
+    sortOrder.reverse();
+  }
+  sortOrder.forEach(function (element, index) {
+    element.domElement.style.order = index;
+  });
+}
+
 //! Site Initialization
 
 swapView(currentView);
@@ -298,7 +321,9 @@ swapView(currentView);
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');
+  setLoading(true);
   redrawResultsView();
+  resultsOrder('reverse');
   swapView('rating');
   drawNewCard();
 }

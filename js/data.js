@@ -1,5 +1,6 @@
 /* exported data */
 /* exported cardData */
+/* exported userCardSort */
 /* global initializeSite */
 
 //! Initialize ALL Data
@@ -70,10 +71,38 @@ function loadUserDataFromStorage() {
   }
 }
 
+//! Sort User Cards
+var userCardSort = {
+  filter(string) {
+    var output = [];
+    switch (string) {
+      case ('👍'):
+        output = userCards.filter(function (element) {
+          return element.rating === '👍';
+        });
+        break;
+      case ('👎'):
+        output = userCards.filter(function (element) {
+          return element.rating === '👎';
+        });
+        break;
+      default:
+        output = userCards;
+        break;
+    }
+    return output;
+  },
+  recent: function () {
+    userCards.sort(function (a, b) {
+      return a.timeRated - b.timeRated;
+    });
+    return userCards;
+  }
+};
+
 //! Filter Working Data
 
 function filterData() {
-
   rawData.forEach(function (element, index) {
     var notIncluded = false;
     for (var rating = 0; rating < userData.ratings.length; rating++) {
