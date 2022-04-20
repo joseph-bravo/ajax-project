@@ -3,11 +3,11 @@
   font-weight: normal;
 }
 
-h1 {
+h1,
+header button {
   font-family: "Reem Kufi", sans-serif;
-  font-weight: bold;
 }
 
-button {
-  all: unset;
+h1 {
+  font-weight: bold;
 }

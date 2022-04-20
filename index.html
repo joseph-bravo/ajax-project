@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
   <link
   rel="stylesheet"
   crossorigin="anonymous"
@@ -29,14 +29,31 @@
 
   <header class="drop-shadow">
     <div class="container full-height">
-      <div class="row full-height align-center">
-        <h1 class="logo">YGO Like or Strike</h1>
+      <div class="row full-height align-center " data-view="rating">
+        <div class="flex-grow-2">
+          <h1 class="logo">YGO Like or Strike</h1>
+        </div>
+        <div class="flex-grow-1">
+          <a data-nav="results" class="text-align-right">Results</a>
+        </div>
+      </div>
+      <div class="row full-height align-center hidden" data-view="results">
+        <div class="flex-grow-1">
+          <a data-nav="rating" class="text-align-left">Back</a>
+        </div>
+        <div class="flex-grow-2">
+          <h1 class="logo text-align-center">Results</h1>
+        </div>
+        <div class="flex-grow-1">
+          <a></a>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="hidden">
-    <div class="container">
+  <main class="">
+
+    <div class="container " data-view="rating">
       <div class="row pad-top-sm">
         <div class="card-display text-align-center column-full">
           <div class="row justify-center">
@@ -75,8 +92,20 @@
           </div>
         </div>
       </div>
-
     </div>
+
+    <div class="container hidden" data-view="results">
+      <ul class="results-list">
+        <li class="card card-liked" data-card-id="0841308">
+          <img class="race" src="images/iconsMD/cyberse.png" alt="">
+          <div class="card-text">
+            <h3>Card Name</h3>
+            <h4>Card Data</h4>
+          </div>
+        </li>
+      </ul>
+    </div>
+
   </main>
 </body>
 </html>

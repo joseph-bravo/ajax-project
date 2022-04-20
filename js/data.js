@@ -3,7 +3,7 @@
 /* global initializeSite */
 
 //! Initialize ALL Data
-pullAllCardData();
+// pullAllCardData();
 
 //! Reset Data
 var resetting = false;

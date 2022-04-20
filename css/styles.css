@@ -14,6 +14,7 @@
 button,
 a {
   cursor: pointer;
+  display: block;
 }
 
 /** Utility */
@@ -27,6 +28,14 @@ a {
 
 .text-align-center {
   text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-left {
+  text-align: left;
 }
 
 /** Content */
@@ -78,8 +87,17 @@ h3 * {
 
 /** buttons */
 
-button {
-  display: block;
+header a {
+  background: 0;
+  font-size: 1.25rem;
+  color: var(--logo-txt-color);
+}
+
+header a:active {
+  color: var(--button-color);
+}
+
+main button {
   color: var(--logo-txt-color);
   background: var(--button-color);
   font-weight: bold;
@@ -101,7 +119,7 @@ button:disabled {
   cursor: default;
 }
 
-button:enabled:active {
+main button:enabled:active {
   color: var(--button-color);
   background: var(--button-clicked-color);
   box-shadow: var(--shadow) inset;
@@ -130,7 +148,7 @@ button:enabled:active {
 
 /** images */
 
-img {
+.image-container img {
   box-shadow: var(--shadow);
   max-width: 100%;
   object-fit: cover;
@@ -148,4 +166,70 @@ img {
 
 .disliked .label-block {
   background-color: var(--dislike-color);
+}
+
+/** results styling */
+ul.results-list {
+  overflow-y: auto;
+  all: unset;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1rem 0;
+}
+
+li.card {
+  all: unset;
+  font-stretch: semi-condensed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: right;
+  padding: 0.33rem;
+  width: 90%;
+  background-color: var(--label-color);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+}
+
+li.card img.race {
+  width: 3rem;
+}
+
+li.card .card-text {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  justify-content: right;
+  align-items: center;
+}
+
+li.card .card-text * {
+  display: block;
+  flex-basis: 100%;
+  line-height: 1em;
+}
+
+li.card h3 {
+  font-size: 1.5rem;
+}
+
+li.card h4 {
+  font-size: 1rem;
+}
+
+li.card-liked {
+  background-color: var(--like-color);
+}
+
+li.card-disliked {
+  background-color: var(--dislike-color);
+}
+
+@media only screen and (min-width: 768px) {
+  li.card {
+    flex-basis: 40%;
+  }
 }

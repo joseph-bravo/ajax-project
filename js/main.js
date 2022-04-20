@@ -4,8 +4,6 @@
 /* global userCards */
 /* global _ */
 
-// ! utility
-
 // ! main
 var currentCard = {};
 var currentlyLoading = false;
@@ -15,17 +13,40 @@ var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
 var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
-var $buttonNewCard = document.querySelector('.new-card-button');
+var $remainingCards = document.querySelector('#remaining-cards');
+
+var $newCardButton = document.querySelector('.new-card-button');
 var $likeButton = document.querySelector('.like-button');
 var $dislikeButton = document.querySelector('.dislike-button');
-var $remainingCards = document.querySelector('#remaining-cards');
+
+var $views = document.querySelectorAll('[data-view]');
+var $navLinks = document.querySelectorAll('[data-nav]');
+
+var currentView = 'results';
+
+//* View Swapping
+function swapView(switchToView) {
+  for (var i = 0; i < $views.length; i++) {
+    if ($views[i].dataset.view === switchToView) {
+      $views[i].classList.remove('hidden');
+    } else {
+      $views[i].classList.add('hidden');
+    }
+  }
+}
+
+for (var i = 0; i < $navLinks.length; i++) {
+  $navLinks[i].addEventListener('click', function (event) {
+    swapView(event.target.dataset.nav);
+  });
+}
 
 //* Change loading state
 function setLoading(bool) {
   if (bool) {
     currentlyLoading = true;
 
-    $buttonNewCard.disabled = true;
+    $newCardButton.disabled = true;
     $likeButton.disabled = true;
     $dislikeButton.disabled = true;
 
@@ -33,7 +54,7 @@ function setLoading(bool) {
   } else {
     currentlyLoading = false;
 
-    $buttonNewCard.disabled = false;
+    $newCardButton.disabled = false;
     $likeButton.disabled = false;
     $dislikeButton.disabled = false;
 
@@ -69,7 +90,7 @@ function displayCard(card, animation) {
   });
 }
 
-// * Animation Handler
+// * Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
   likeCard: 'animate__backOutRight',
@@ -127,12 +148,12 @@ function drawNewCard(action) {
   displayCard(currentCard, action);
 }
 
-$buttonNewCard.addEventListener('click', function () {
+$newCardButton.addEventListener('click', function () {
   drawNewCard('discard');
 });
 window.addEventListener('keydown', function (event) {
   if (event.key === ' ') {
-    $buttonNewCard.click();
+    $newCardButton.click();
   }
 });
 
@@ -161,7 +182,22 @@ function rateCard(event) {
 }
 $ratingButtons.addEventListener('click', rateCard);
 
+//* Results card <li> DOM Creation
+function createCardEntry(ratedObj) {
+  /*
+    ? DOM Format:
+    <li class="card card-liked" data-card-id="0841308">
+      <img class="race" src="images/iconsMD/cyberse.png" alt="">
+      <div class="catext">
+        <h3>Card Name</h3>
+        <h4>Card Data<rd-/h4>
+      </div>
+    </li>
+  */
+}
 //! Site Initialization
+
+swapView(currentView);
 
 /* exported initializeSite */
 function initializeSite() {
