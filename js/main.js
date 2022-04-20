@@ -28,7 +28,10 @@ var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
-var viewRatingOption = 'all';
+
+var resultOptionView = 'all';
+var resultOptionArchetype = 'hide';
+var resultOptionOrder = 'recent';
 
 //* View Swapping
 function swapView(switchToView) {
@@ -37,7 +40,7 @@ function swapView(switchToView) {
   }
 
   if (switchToView === 'results') {
-    resultsShowOnly(viewRatingOption);
+    resultsShowOnly(resultOptionView);
   }
 
   for (var i = 0; i < $views.length; i++) {
@@ -330,15 +333,15 @@ function resultsOrder(direction) {
 var $viewRatingButtons = document.querySelectorAll('.view-button');
 
 function viewRatingButtonHandler(event) {
-  viewRatingOption = event.target.dataset.option;
+  resultOptionView = event.target.dataset.option;
   $viewRatingButtons.forEach(function (element) {
-    if (element.dataset.option === viewRatingOption) {
+    if (element.dataset.option === resultOptionView) {
       element.classList.add('active');
     } else {
       element.classList.remove('active');
     }
   });
-  resultsShowOnly(viewRatingOption);
+  resultsShowOnly(resultOptionView);
 }
 
 $viewRatingButtons.forEach(function (element) {

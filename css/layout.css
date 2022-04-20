@@ -29,8 +29,13 @@
   flex-basis: 50%;
 }
 
-.column-full {
+.column-full,
+.column-break-half {
   flex-basis: 100%;
+}
+
+.column-break-half-half {
+  flex: 1;
 }
 
 .flex-grow-1 {
@@ -85,4 +90,13 @@
 .pad-y-med {
   padding-top: 3rem;
   padding-bottom: 3rem;
+}
+
+/** Media Rules */
+
+@media only screen and (min-width: 800px) {
+  .column-break-half,
+  .column-break-half-half {
+    flex: 1;
+  }
 }

@@ -96,21 +96,59 @@
     </div>
 
     <div class="container hidden" data-view="results">
-      <div class="row flex-wrap view-options text-align-center justify-center pad-top-sm gap-y-sm">
-        <div class="column-full label-block drop-shadow">
-          <h3>View Ratings</h3>
+      <div class="row flex-wrap results-options justify-center pad-top-sm gap-y-sm gap-x-sm">
+        <div class="column-break-half view-options"> <!-- View Options -->
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>View Ratings</h3>
+            </div>
+            <div class="column-full">
+              <div class="row view-options-buttons justify-space-between gap-x-smaller">
+                <button data-option="👎" class="view-button flex-grow-1">
+                  Disliked
+                </button>
+                <button data-option="all" class="view-button flex-grow-1">
+                  All
+                </button>
+                <button data-option="👍" class="view-button flex-grow-1">
+                  Liked
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="column-full">
-          <div class="row view-options-buttons justify-space-between gap-x-smaller">
-            <button data-option="👎" class="view-button flex-grow-1">
-              Disliked
-            </button>
-            <button data-option="all" class="view-button flex-grow-1">
-              All
-            </button>
-            <button data-option="👍" class="view-button flex-grow-1">
-              Liked
-            </button>
+        <div class="column-break-half-half archetype-options">
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>View Archetype</h3>
+            </div>
+            <div class="column-full">
+              <div class="row justify-space-between gap-x-smaller">
+                <button data-option="hide" class="archetype-button flex-grow-1">
+                  Hide
+                </button>
+                <button data-option="show" class="archetype-button flex-grow-1">
+                  Show
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column-break-half-half order-options">
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>Sort Order</h3>
+            </div>
+            <div class="column-full">
+              <div class="row justify-space-between gap-x-smaller">
+                <button data-option="recent" class="order-button flex-grow-1">
+                  Recent
+                </button>
+                <button data-option="oldest" class="order-button flex-grow-1">
+                  Oldest
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>

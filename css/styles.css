@@ -122,7 +122,7 @@ main button {
   padding-bottom: 1.25rem;
 }
 
-button.view-button {
+.results-options button {
   font-size: 1.25rem;
   font-weight: normal;
   padding: 0.25rem 0.5rem;
@@ -256,16 +256,8 @@ li.card-disliked a {
 
 /** View Options */
 
-.view-options {
-  margin: 0 auto;
-  padding-left: 10%;
-  padding-right: 10%;
-  max-width: 600px;
+.results-options {
   font-size: 1.25rem;
-}
-
-.view-options-buttons {
-  max-width: 100%;
 }
 
 main button[data-option="👎"]:active,
@@ -278,8 +270,21 @@ button[data-option="👍"].active {
   background-color: var(--like-color);
 }
 
+/** media queries */
 @media only screen and (min-width: 800px) {
   li.card {
     flex-basis: 40%;
+  }
+
+  .view-options {
+    order: 2;
+  }
+
+  .archetype-options {
+    order: 1;
+  }
+
+  .order-options {
+    order: 3;
   }
 }

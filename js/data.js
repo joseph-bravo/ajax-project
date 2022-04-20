@@ -92,11 +92,15 @@ var userCardSort = {
     }
     return output;
   },
-  recent: function () {
-    userCards.sort(function (a, b) {
+  recent: function (target) {
+    if (!target) {
+      target = userCards;
+    }
+    var output = target.slice();
+    output.sort(function (a, b) {
       return a.timeRated - b.timeRated;
     });
-    return userCards;
+    return output;
   }
 };
 
