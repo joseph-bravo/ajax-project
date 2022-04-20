@@ -1,5 +1,6 @@
 /* exported data */
 /* exported cardData */
+/* exported userCardSort */
 /* global initializeSite */
 
 //! Initialize ALL Data
@@ -43,6 +44,7 @@ var userData = {
 function Rating(id, rating) {
   this.id = id;
   this.rating = rating;
+  this.timeRated = Date.now();
 }
 
 function saveUserDataToStorage() {
@@ -69,17 +71,46 @@ function loadUserDataFromStorage() {
   }
 }
 
+//! Sort User Cards
+var userCardSort = {
+  filter(string) {
+    var output = [];
+    switch (string) {
+      case ('👍'):
+        output = userCards.filter(function (element) {
+          return element.rating === '👍';
+        });
+        break;
+      case ('👎'):
+        output = userCards.filter(function (element) {
+          return element.rating === '👎';
+        });
+        break;
+      default:
+        output = userCards;
+        break;
+    }
+    return output;
+  },
+  recent: function () {
+    userCards.sort(function (a, b) {
+      return a.timeRated - b.timeRated;
+    });
+    return userCards;
+  }
+};
+
 //! Filter Working Data
 
 function filterData() {
-
   rawData.forEach(function (element, index) {
     var notIncluded = false;
     for (var rating = 0; rating < userData.ratings.length; rating++) {
       var currentRating = userData.ratings[rating];
       if (element.id === currentRating.id) {
         element.rating = currentRating.rating;
-        userCards.push(element);
+        element.timeRated = currentRating.timeRated;
+        userCards.unshift(element);
         notIncluded = false;
         break;
       } else {
@@ -87,7 +118,7 @@ function filterData() {
       }
     }
     if (notIncluded || userData.ratings.length === 0) {
-      remainingCards.push(element);
+      remainingCards.unshift(element);
     }
   });
 }

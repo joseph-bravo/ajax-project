@@ -8,7 +8,7 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
-  <link href="https://fonts.googleapis.com/css2?family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400..700&family=Saira:wdth@50..125&display=swap&display=swap" rel="stylesheet">
   <link
   rel="stylesheet"
   crossorigin="anonymous"
@@ -22,6 +22,7 @@
   <link rel="stylesheet" href="css/styles.css">
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.15/lodash.js"></script>
+  <script src="js/dom-utility.js"></script>
   <script defer src="js/data.js"></script>
   <script defer src="js/main.js"></script>
 </head>
@@ -29,20 +30,37 @@
 
   <header class="drop-shadow">
     <div class="container full-height">
-      <div class="row full-height align-center">
-        <h1 class="logo">YGO Like or Strike</h1>
+      <div class="row full-height align-center " data-view="rating">
+        <div class="flex-grow-2">
+          <h1 class="logo">YGO Like or Strike</h1>
+        </div>
+        <div class="flex-grow-1">
+          <a data-nav="results" class="text-align-right">Results</a>
+        </div>
+      </div>
+      <div class="row full-height align-center hidden" data-view="results">
+        <div class="flex-grow-1">
+          <a data-nav="rating" class="text-align-left">Back</a>
+        </div>
+        <div class="flex-grow-2">
+          <h1 class="logo text-align-center">Results</h1>
+        </div>
+        <div class="flex-grow-1">
+          <a></a>
+        </div>
       </div>
     </div>
   </header>
 
-  <main class="hidden">
-    <div class="container">
+  <main class="">
+
+    <div class="container " data-view="rating">
       <div class="row pad-top-sm">
         <div class="card-display text-align-center column-full">
           <div class="row justify-center">
-            <div class="label-block drop-shadow loading">
-              <h2 id="card-title">Card Title</h2>
-            </div>
+            <a target="_blank" id="card-link" class="label-block drop-shadow">
+              <h2 id="card-title"></h2>
+            </a>
           </div>
           <div class="row pad-y-med justify-center">
             <div class="image-container animate__animated animate__faster">
@@ -52,17 +70,17 @@
         </div>
       </div>
       <div class="row justify-center rating-buttons gap-x-sm">
-        <button class="dislike-button">
+        <button class="dislike-button disabled">
           <i class="fas fa-heart-broken"></i>
         </button>
-        <button class="like-button">
+        <button class="like-button disabled">
           <i class="fas fa-heart"></i>
         </button>
       </div>
       <div class="row pad-y-sm justify-center">
         <div class="column-full">
           <div class="row justify-center">
-            <button class="new-card-button drop-shadow">
+            <button class="new-card-button drop-shadow disabled">
               New Card
             </button>
           </div>
@@ -75,8 +93,38 @@
           </div>
         </div>
       </div>
-
     </div>
+
+    <div class="container hidden" data-view="results">
+      <div class="row flex-wrap view-options text-align-center justify-center pad-top-sm gap-y-sm">
+        <div class="column-full label-block drop-shadow">
+          <h3>View Ratings</h3>
+        </div>
+        <div class="column-full">
+          <div class="row view-options-buttons justify-space-between gap-x-smaller">
+            <button data-option="👎" class="view-button flex-grow-1">
+              Disliked
+            </button>
+            <button data-option="all" class="view-button flex-grow-1">
+              All
+            </button>
+            <button data-option="👍" class="view-button flex-grow-1">
+              Liked
+            </button>
+          </div>
+        </div>
+      </div>
+      <ul class="results-list">
+        <li class="card card-liked" data-card-id="0841308">
+          <img class="race" src="images/iconsMD/cyberse.png" alt="">
+          <div class="card-text">
+            <h3>Card Name</h3>
+            <h4>Card Data</h4>
+          </div>
+        </li>
+      </ul>
+    </div>
+
   </main>
 </body>
 </html>

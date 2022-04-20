@@ -2,30 +2,66 @@
 /* global Rating */
 /* global remainingCards */
 /* global userCards */
+/* global userCardSort */
+/* global domUtils */
 /* global _ */
-
-// ! utility
 
 // ! main
 var currentCard = {};
-var currentlyLoading = false;
+var currentlyLoading = true;
 
 var $main = document.querySelector('main');
 var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
+var $mainCardLink = document.querySelector('#card-link');
 var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
-var $buttonNewCard = document.querySelector('.new-card-button');
+var $remainingCards = document.querySelector('#remaining-cards');
+
+var $newCardButton = document.querySelector('.new-card-button');
 var $likeButton = document.querySelector('.like-button');
 var $dislikeButton = document.querySelector('.dislike-button');
-var $remainingCards = document.querySelector('#remaining-cards');
+
+var $resultsList = document.querySelector('ul.results-list');
+
+var $views = document.querySelectorAll('[data-view]');
+var $navLinks = document.querySelectorAll('[data-nav]');
+
+var currentView = '';
+var viewRatingOption = 'all';
+
+//* View Swapping
+function swapView(switchToView) {
+  if (currentView === switchToView) {
+    return;
+  }
+
+  if (switchToView === 'results') {
+    resultsShowOnly(viewRatingOption);
+  }
+
+  for (var i = 0; i < $views.length; i++) {
+    if ($views[i].dataset.view === switchToView) {
+      $views[i].classList.remove('hidden');
+    } else {
+      $views[i].classList.add('hidden');
+    }
+  }
+  currentView = switchToView;
+}
+
+for (var i = 0; i < $navLinks.length; i++) {
+  $navLinks[i].addEventListener('click', function (event) {
+    swapView(event.target.dataset.nav);
+  });
+}
 
 //* Change loading state
 function setLoading(bool) {
   if (bool) {
     currentlyLoading = true;
 
-    $buttonNewCard.disabled = true;
+    $newCardButton.disabled = true;
     $likeButton.disabled = true;
     $dislikeButton.disabled = true;
 
@@ -33,7 +69,7 @@ function setLoading(bool) {
   } else {
     currentlyLoading = false;
 
-    $buttonNewCard.disabled = false;
+    $newCardButton.disabled = false;
     $likeButton.disabled = false;
     $dislikeButton.disabled = false;
 
@@ -65,11 +101,13 @@ function displayCard(card, animation) {
     setAnimation($imageContainer, 'view');
 
     $mainCardTitle.textContent = card.name;
+    $mainCardLink.href = 'https://db.ygoprodeck.com/card/?search=' + card.id;
+
     $remainingCards.textContent = remainingCards.length;
   });
 }
 
-// * Animation Handler
+//* Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
   likeCard: 'animate__backOutRight',
@@ -120,20 +158,15 @@ $imageContainer.addEventListener('animationend', animationEndHandler);
 
 //* New Card button.
 function drawNewCard(action) {
-  if (currentlyLoading) {
-    return;
-  }
   currentCard = _.sample(remainingCards);
   displayCard(currentCard, action);
 }
 
-$buttonNewCard.addEventListener('click', function () {
-  drawNewCard('discard');
-});
-window.addEventListener('keydown', function (event) {
-  if (event.key === ' ') {
-    $buttonNewCard.click();
+$newCardButton.addEventListener('click', function () {
+  if (currentlyLoading) {
+    return;
   }
+  drawNewCard('discard');
 });
 
 //* Like/Dislike buttons
@@ -152,19 +185,181 @@ function rateCard(event) {
       rating = new Rating(currentCard.id, '👎');
       currentCard.rating = '👎';
     }
-    userData.ratings.push(rating);
-    userCards.push(currentCard);
+    currentCard.timeRated = Date.now();
+    userData.ratings.unshift(rating);
+    userCards.unshift(currentCard);
+    prependToResultsView(currentCard);
+
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
+
     drawNewCard(currentCard.rating);
   }
 }
 $ratingButtons.addEventListener('click', rateCard);
 
+//* Bind keyboard to buttons
+window.addEventListener('keydown', function (event) {
+  switch (event.key) {
+    case ' ':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $newCardButton.click();
+      break;
+    case 'ArrowLeft':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $dislikeButton.click();
+      break;
+    case 'ArrowRight':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $likeButton.click();
+      break;
+    case 'r':
+      swapView('results');
+      break;
+    case 'Escape':
+      swapView('rating');
+      break;
+  }
+});
+
+//* Results card <li> DOM Creation
+function getIconFromCardObj(cardObj) {
+  var kebabed = _.kebabCase(cardObj.race);
+  return 'images/iconsMD/' + kebabed + '.png';
+}
+
+function createCardEntryDOM(ratedCardObj) {
+  /*
+    * <li class="card card-liked" data-card-id="0841308">
+    *   <img class="race" src="images/iconsMD/cyberse.png" alt="race icon">
+    *   <div class="card-text">
+    *     <h3>Card Name</h3>
+    *     <h4>Card Data</h4>
+    *   </div>
+    * </li>
+  */
+
+  var cardColor;
+
+  if (ratedCardObj.rating === '👍') {
+    cardColor = 'card-liked';
+  } else {
+    cardColor = 'card-disliked';
+  }
+
+  var $li = domUtils.createElement('li', {
+    class: 'card ' + cardColor,
+    'data-card-id': ratedCardObj.id
+  });
+
+  var $a = domUtils.createElement('a', {
+    href: 'https://db.ygoprodeck.com/card/?search=' + ratedCardObj.id,
+    target: '_blank'
+  });
+
+  var $img = domUtils.createElement('img', {
+    class: 'race',
+    src: getIconFromCardObj(ratedCardObj),
+    alt: ratedCardObj.race + ' icon'
+  });
+
+  var $cardText = domUtils.createElement('div', {
+    class: 'card-text'
+  });
+
+  var $h3 = domUtils.createElement('h3', {}, ratedCardObj.name);
+
+  var archetype = '';
+  if (ratedCardObj.race) {
+    archetype = ' (' + ratedCardObj.race + ')';
+  }
+
+  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']' + archetype;
+
+  var $h4 = domUtils.createElement('h4', {}, h4TextContent);
+
+  $cardText.append($h3, $h4);
+  $a.append($img, $cardText);
+  $li.append($a);
+
+  ratedCardObj.domElement = $li;
+  return $li;
+}
+
+function prependToResultsView(card) {
+  $resultsList.prepend(createCardEntryDOM(card));
+}
+
+function redrawResultsView() {
+  while ($resultsList.children.length > 0) {
+    $resultsList.children[0].remove();
+  }
+  userCards.forEach(function (element) {
+    prependToResultsView(element);
+  });
+}
+
+//* Sorting Results View
+function resultsShowOnly(filter) {
+  var toShow = userCardSort.filter(filter);
+  userCards.forEach(function (element) {
+    if (toShow.includes(element)) {
+      element.domElement.classList.remove('hidden');
+    } else {
+      element.domElement.classList.add('hidden');
+    }
+  });
+}
+
+function resultsOrder(direction) {
+  var sortOrder = userCardSort.recent();
+  if (direction === 'reverse') {
+    sortOrder.reverse();
+  }
+  sortOrder.forEach(function (element, index) {
+    element.domElement.style.order = index;
+  });
+}
+
+var $viewRatingButtons = document.querySelectorAll('.view-button');
+
+function viewRatingButtonHandler(event) {
+  viewRatingOption = event.target.dataset.option;
+  $viewRatingButtons.forEach(function (element) {
+    if (element.dataset.option === viewRatingOption) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  resultsShowOnly(viewRatingOption);
+}
+
+$viewRatingButtons.forEach(function (element) {
+  element.addEventListener('click', viewRatingButtonHandler);
+});
+
+var $viewAllButton = document.querySelector('[data-option="all"]');
+
 //! Site Initialization
+
+swapView(currentView);
+
+// * initializeSite() runs after data loads in.
 
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');
+  setLoading(true);
+  redrawResultsView();
+  resultsOrder('reverse');
+  $viewAllButton.click();
+  swapView('rating');
   drawNewCard();
 }

@@ -12,8 +12,14 @@
 }
 
 button,
-a {
+a,
+a > * {
   cursor: pointer;
+}
+
+button,
+header a {
+  display: block;
 }
 
 /** Utility */
@@ -27,6 +33,14 @@ a {
 
 .text-align-center {
   text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-left {
+  text-align: left;
 }
 
 /** Content */
@@ -56,19 +70,23 @@ button {
   width: 100%;
 }
 
-.label-block {
+.card-display .label-block {
   font-stretch: extra-condensed;
   font-size: 1.5rem;
-  max-width: 600px;
+  max-width: 450px;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .remaining-cards-block {
   font-weight: bold;
+  font-size: 1.25rem;
   max-width: 350px;
 }
 
 h2 {
   font-stretch: 66%;
+  font-weight: 400;
 }
 
 h3,
@@ -78,8 +96,17 @@ h3 * {
 
 /** buttons */
 
-button {
-  display: block;
+header a {
+  background: 0;
+  font-size: 1.25rem;
+  color: var(--logo-txt-color);
+}
+
+header a:active {
+  color: var(--button-color);
+}
+
+main button {
   color: var(--logo-txt-color);
   background: var(--button-color);
   font-weight: bold;
@@ -95,21 +122,32 @@ button {
   padding-bottom: 1.25rem;
 }
 
+button.view-button {
+  font-size: 1.25rem;
+  font-weight: normal;
+  padding: 0.25rem 0.5rem;
+}
+
 .loading > *,
 button:disabled {
   filter: brightness(0.75);
   cursor: default;
 }
 
-button:enabled:active {
+button.active {
+  cursor: default;
+}
+
+main button:enabled:active,
+main button.active {
   color: var(--button-color);
   background: var(--button-clicked-color);
   box-shadow: var(--shadow) inset;
 }
 
 .new-card-button {
-  font-size: 2rem;
-  width: clamp(0px, 80%, 400px);
+  font-size: 1.5rem;
+  width: clamp(0px, 70%, 300px);
 }
 
 .like-button i {
@@ -130,7 +168,7 @@ button:enabled:active {
 
 /** images */
 
-img {
+.image-container img {
   box-shadow: var(--shadow);
   max-width: 100%;
   object-fit: cover;
@@ -138,7 +176,7 @@ img {
 }
 
 .image-container {
-  width: clamp(0px, 80%, 400px);
+  width: clamp(0px, 80%, 375px);
   height: fit-content;
 }
 
@@ -148,4 +186,100 @@ img {
 
 .disliked .label-block {
   background-color: var(--dislike-color);
+}
+
+/** results styling */
+ul.results-list {
+  overflow-y: auto;
+  all: unset;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+  width: 100%;
+  padding: 1.5rem 0;
+}
+
+li.card {
+  all: unset;
+  width: 90%;
+}
+
+li.card a {
+  font-stretch: semi-condensed;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  text-align: right;
+  padding: 0.33rem;
+  background-color: var(--label-color);
+  border-radius: 5px;
+  box-shadow: var(--shadow);
+}
+
+li.card img.race {
+  width: 3rem;
+}
+
+li.card .card-text {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  justify-content: right;
+  align-items: center;
+}
+
+li.card .card-text h3,
+li.card .card-text h4 {
+  display: block;
+  flex-basis: 100%;
+  line-height: 1em;
+  font-weight: normal;
+}
+
+li.card .card-text h3 {
+  font-size: 1.5rem;
+}
+
+li.card .card-text h4 {
+  font-size: 1rem;
+  font-style: italic;
+}
+
+li.card-liked a {
+  background-color: var(--like-color);
+}
+
+li.card-disliked a {
+  background-color: var(--dislike-color);
+}
+
+/** View Options */
+
+.view-options {
+  margin: 0 auto;
+  padding-left: 10%;
+  padding-right: 10%;
+  max-width: 600px;
+  font-size: 1.25rem;
+}
+
+.view-options-buttons {
+  max-width: 100%;
+}
+
+main button[data-option="👎"]:active,
+button[data-option="👎"].active {
+  background-color: var(--dislike-color);
+}
+
+main button[data-option="👍"]:active,
+button[data-option="👍"].active {
+  background-color: var(--like-color);
+}
+
+@media only screen and (min-width: 800px) {
+  li.card {
+    flex-basis: 40%;
+  }
 }

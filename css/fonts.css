@@ -1,13 +1,12 @@
 * {
   font-family: Saira, sans-serif;
-  font-weight: normal;
+}
+
+h1,
+header button {
+  font-family: "Reem Kufi", sans-serif;
 }
 
 h1 {
-  font-family: "Reem Kufi", sans-serif;
   font-weight: bold;
-}
-
-button {
-  all: unset;
 }
