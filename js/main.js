@@ -11,8 +11,9 @@ var currentCard = {};
 var currentlyLoading = true;
 
 var $main = document.querySelector('main');
-var $mainCardTitle = document.querySelector('#card-title > a');
+var $mainCardTitle = document.querySelector('#card-title');
 var $mainCardImage = document.querySelector('#card-image');
+var $mainCardLink = document.querySelector('#card-link');
 var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
 var $remainingCards = document.querySelector('#remaining-cards');
@@ -27,6 +28,7 @@ var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
+var viewRatingOption = 'all';
 
 //* View Swapping
 function swapView(switchToView) {
@@ -34,9 +36,9 @@ function swapView(switchToView) {
     return;
   }
 
-  // if (switchToView === 'results') {
-  //   redrawResultsView();
-  // }
+  if (switchToView === 'results') {
+    resultsShowOnly(viewRatingOption);
+  }
 
   for (var i = 0; i < $views.length; i++) {
     if ($views[i].dataset.view === switchToView) {
@@ -45,7 +47,6 @@ function swapView(switchToView) {
       $views[i].classList.add('hidden');
     }
   }
-
   currentView = switchToView;
 }
 
@@ -100,7 +101,7 @@ function displayCard(card, animation) {
     setAnimation($imageContainer, 'view');
 
     $mainCardTitle.textContent = card.name;
-    $mainCardTitle.href = 'https://db.ygoprodeck.com/card/?search=' + card.id;
+    $mainCardLink.href = 'https://db.ygoprodeck.com/card/?search=' + card.id;
 
     $remainingCards.textContent = remainingCards.length;
   });
@@ -315,23 +316,25 @@ function resultsOrder(direction) {
   });
 }
 
-var $sortButtons = document.querySelectorAll('.sort-button');
+var $viewRatingButtons = document.querySelectorAll('.view-button');
 
-function sortButtonHandler(event) {
-  $sortButtons.forEach(function (element) {
-    if (element === event.target) {
+function viewRatingButtonHandler(event) {
+  viewRatingOption = event.target.dataset.option;
+  $viewRatingButtons.forEach(function (element) {
+    if (element.dataset.option === viewRatingOption) {
       element.classList.add('active');
     } else {
       element.classList.remove('active');
     }
   });
-  var selectedOption = event.target.dataset.option;
-  resultsShowOnly(selectedOption);
+  resultsShowOnly(viewRatingOption);
 }
 
-$sortButtons.forEach(function (element) {
-  element.addEventListener('click', sortButtonHandler);
+$viewRatingButtons.forEach(function (element) {
+  element.addEventListener('click', viewRatingButtonHandler);
 });
+
+var $viewAllButton = document.querySelector('[data-option="all"]');
 
 //! Site Initialization
 
@@ -345,6 +348,7 @@ function initializeSite() {
   setLoading(true);
   redrawResultsView();
   resultsOrder('reverse');
+  $viewAllButton.click();
   swapView('rating');
   drawNewCard();
 }

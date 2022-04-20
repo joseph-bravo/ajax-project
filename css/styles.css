@@ -72,7 +72,7 @@ button {
 .card-display .label-block {
   font-stretch: extra-condensed;
   font-size: 1.5rem;
-  max-width: 600px;
+  max-width: 450px;
   padding-left: 1rem;
   padding-right: 1rem;
 }
@@ -121,7 +121,7 @@ main button {
   padding-bottom: 1.25rem;
 }
 
-button.sort-button {
+button.view-button {
   font-size: 1.25rem;
   font-weight: normal;
   padding: 0.25rem 0.5rem;
@@ -250,17 +250,17 @@ li.card-disliked {
   background-color: var(--dislike-color);
 }
 
-/** Sort Options */
+/** View Options */
 
-.sort-options {
+.view-options {
   margin: 0 auto;
   padding-left: 10%;
   padding-right: 10%;
   max-width: 600px;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
 }
 
-.sort-options-buttons {
+.view-options-buttons {
   max-width: 100%;
 }
 

@@ -58,9 +58,9 @@
       <div class="row pad-top-sm">
         <div class="card-display text-align-center column-full">
           <div class="row justify-center">
-            <div class="label-block drop-shadow loading">
-              <h2 id="card-title"><a target="_blank" href="">Card Title</a></h2>
-            </div>
+            <a id="card-link" class="label-block drop-shadow">
+              <h2 id="card-title"></h2>
+            </a>
           </div>
           <div class="row pad-y-med justify-center">
             <div class="image-container animate__animated animate__faster">
@@ -96,19 +96,19 @@
     </div>
 
     <div class="container hidden" data-view="results">
-      <div class="row flex-wrap sort-options text-align-center justify-center pad-top-sm gap-y-sm">
+      <div class="row flex-wrap view-options text-align-center justify-center pad-top-sm gap-y-sm">
         <div class="column-full label-block drop-shadow">
-          <h3>Sort Options</h3>
+          <h3>View Ratings</h3>
         </div>
         <div class="column-full">
-          <div class="row sort-options-buttons justify-space-between gap-x-smaller">
-            <button data-option="👎" class="sort-button flex-grow-1">
+          <div class="row view-options-buttons justify-space-between gap-x-smaller">
+            <button data-option="👎" class="view-button flex-grow-1">
               Disliked
             </button>
-            <button data-option="all" class="sort-button flex-grow-1">
+            <button data-option="all" class="view-button flex-grow-1">
               All
             </button>
-            <button data-option="👍" class="sort-button flex-grow-1">
+            <button data-option="👍" class="view-button flex-grow-1">
               Liked
             </button>
           </div>
