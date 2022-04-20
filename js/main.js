@@ -11,7 +11,7 @@ var currentCard = {};
 var currentlyLoading = true;
 
 var $main = document.querySelector('main');
-var $mainCardTitle = document.querySelector('#card-title');
+var $mainCardTitle = document.querySelector('#card-title > a');
 var $mainCardImage = document.querySelector('#card-image');
 var $mainCardDisplay = document.querySelector('.card-display');
 var $imageContainer = document.querySelector('.image-container');
@@ -100,6 +100,8 @@ function displayCard(card, animation) {
     setAnimation($imageContainer, 'view');
 
     $mainCardTitle.textContent = card.name;
+    $mainCardTitle.href = 'https://db.ygoprodeck.com/card/?search=' + card.id;
+
     $remainingCards.textContent = remainingCards.length;
   });
 }
