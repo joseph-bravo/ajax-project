@@ -126,8 +126,8 @@ main button:enabled:active {
 }
 
 .new-card-button {
-  font-size: 2rem;
-  width: clamp(0px, 80%, 400px);
+  font-size: 1.5rem;
+  width: clamp(0px, 70%, 300px);
 }
 
 .like-button i {
@@ -156,7 +156,7 @@ main button:enabled:active {
 }
 
 .image-container {
-  width: clamp(0px, 80%, 400px);
+  width: clamp(0px, 80%, 375px);
   height: fit-content;
 }
 
@@ -228,7 +228,7 @@ li.card-disliked {
   background-color: var(--dislike-color);
 }
 
-@media only screen and (min-width: 768px) {
+@media only screen and (min-width: 800px) {
   li.card {
     flex-basis: 40%;
   }

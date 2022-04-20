@@ -19,13 +19,23 @@ var $newCardButton = document.querySelector('.new-card-button');
 var $likeButton = document.querySelector('.like-button');
 var $dislikeButton = document.querySelector('.dislike-button');
 
+var $resultsList = document.querySelector('ul.results-list');
+
 var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
 
-var currentView = 'results';
+var currentView = '';
 
 //* View Swapping
 function swapView(switchToView) {
+  if (currentView === switchToView) {
+    return;
+  }
+
+  // if (switchToView === 'results') {
+  //   redrawResultsView();
+  // }
+
   for (var i = 0; i < $views.length; i++) {
     if ($views[i].dataset.view === switchToView) {
       $views[i].classList.remove('hidden');
@@ -33,6 +43,8 @@ function swapView(switchToView) {
       $views[i].classList.add('hidden');
     }
   }
+
+  currentView = switchToView;
 }
 
 for (var i = 0; i < $navLinks.length; i++) {
@@ -90,7 +102,7 @@ function displayCard(card, animation) {
   });
 }
 
-// * Animation Handlers
+//* Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
   likeCard: 'animate__backOutRight',
@@ -151,11 +163,6 @@ function drawNewCard(action) {
 $newCardButton.addEventListener('click', function () {
   drawNewCard('discard');
 });
-window.addEventListener('keydown', function (event) {
-  if (event.key === ' ') {
-    $newCardButton.click();
-  }
-});
 
 //* Like/Dislike buttons
 var $ratingButtons = document.querySelector('.rating-buttons');
@@ -173,28 +180,114 @@ function rateCard(event) {
       rating = new Rating(currentCard.id, '👎');
       currentCard.rating = '👎';
     }
-    userData.ratings.push(rating);
-    userCards.push(currentCard);
+    userData.ratings.unshift(rating);
+    userCards.unshift(currentCard);
+    prependToResultsView(currentCard);
+
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
+
     drawNewCard(currentCard.rating);
   }
 }
 $ratingButtons.addEventListener('click', rateCard);
 
+//* Bind keyboard to buttons
+window.addEventListener('keydown', function (event) {
+  switch (event.key) {
+    case ' ':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $newCardButton.click();
+      break;
+    case 'ArrowLeft':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $dislikeButton.click();
+      break;
+    case 'ArrowRight':
+      if (currentView !== 'rating') {
+        break;
+      }
+      $likeButton.click();
+      break;
+    case 'r':
+      swapView('results');
+      break;
+    case 'Escape':
+      swapView('rating');
+      break;
+  }
+});
+
 //* Results card <li> DOM Creation
-function createCardEntry(ratedObj) {
-  /*
-    ? DOM Format:
-    <li class="card card-liked" data-card-id="0841308">
-      <img class="race" src="images/iconsMD/cyberse.png" alt="">
-      <div class="catext">
-        <h3>Card Name</h3>
-        <h4>Card Data<rd-/h4>
-      </div>
-    </li>
-  */
+function getIconFromCardObj(cardObj) {
+  var kebabed = _.kebabCase(cardObj.race);
+  return 'images/iconsMD/' + kebabed + '.png';
 }
+
+function createCardEntry(ratedCardObj) {
+  /*
+    * <li class="card card-liked" data-card-id="0841308">
+    *   <img class="race" src="images/iconsMD/cyberse.png" alt="race icon">
+    *   <div class="card-text">
+    *     <h3>Card Name</h3>
+    *     <h4>Card Data</h4>
+    *   </div>
+    * </li>
+  */
+
+  var cardColor;
+
+  if (ratedCardObj.rating === '👍') {
+    cardColor = 'card-liked';
+  } else {
+    cardColor = 'card-disliked';
+  }
+
+  var $li = domUtils.createElement('li', {
+    class: 'card ' + cardColor,
+    'data-card-id': ratedCardObj.id
+  });
+
+  var $img = domUtils.createElement('img', {
+    class: 'race',
+    src: getIconFromCardObj(ratedCardObj),
+    alt: ratedCardObj.race + ' icon'
+  });
+
+  var $cardText = domUtils.createElement('div', {
+    class: 'card-text'
+  });
+
+  var $h3 = domUtils.createElement('h3', {}, ratedCardObj.name);
+
+  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + '] (' + ratedCardObj.archetype + ')';
+
+  var $h4 = domUtils.createElement('h4', {}, h4TextContent);
+
+  $cardText.append($h3, $h4);
+  $li.append($img, $cardText);
+
+  ratedCardObj.domElement = $li;
+  return $li;
+}
+
+function prependToResultsView(card) {
+  $resultsList.prepend(createCardEntry(card));
+}
+
+function redrawResultsView() {
+  while ($resultsList.children.length > 0) {
+    $resultsList.children[0].remove();
+  }
+  userCards.forEach(function (element) {
+    prependToResultsView(element);
+  });
+}
+
 //! Site Initialization
 
 swapView(currentView);
@@ -202,5 +295,7 @@ swapView(currentView);
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');
+  redrawResultsView();
+  swapView('rating');
   drawNewCard();
 }

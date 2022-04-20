@@ -3,7 +3,7 @@
 /* global initializeSite */
 
 //! Initialize ALL Data
-// pullAllCardData();
+pullAllCardData();
 
 //! Reset Data
 var resetting = false;
@@ -79,7 +79,7 @@ function filterData() {
       var currentRating = userData.ratings[rating];
       if (element.id === currentRating.id) {
         element.rating = currentRating.rating;
-        userCards.push(element);
+        userCards.unshift(element);
         notIncluded = false;
         break;
       } else {
@@ -87,7 +87,7 @@ function filterData() {
       }
     }
     if (notIncluded || userData.ratings.length === 0) {
-      remainingCards.push(element);
+      remainingCards.unshift(element);
     }
   });
 }

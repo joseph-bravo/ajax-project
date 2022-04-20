@@ -9,7 +9,7 @@
 /** flexbox */
 
 .container {
-  width: clamp(0px, 90%, 900px);
+  width: clamp(0px, 90%, 1200px);
   margin: 0 auto;
 }
 
@@ -70,11 +70,11 @@
 }
 
 .pad-y-sm {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
 }
 
 .pad-y-med {
-  padding-top: 4rem;
-  padding-bottom: 4rem;
+  padding-top: 3rem;
+  padding-bottom: 3rem;
 }
