@@ -2,6 +2,7 @@
 /* global Rating */
 /* global remainingCards */
 /* global userCards */
+/* global domUtils */
 /* global _ */
 
 // ! main

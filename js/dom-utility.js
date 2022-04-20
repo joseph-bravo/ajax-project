@@ -1,3 +1,5 @@
+/* exported domUtils */
+
 var domUtils = {
   createElement: function (tagName, attributesObject, txtContent) {
     var $output = document.createElement(tagName);
