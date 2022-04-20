@@ -8,7 +8,13 @@
     "id-duplication": true,
     "permitted-contents": true,
     "required-attr": true,
-    "invalid-attr": true,
+    "invalid-attr": {
+      "option": {
+        "ignoreAttrNamePrefix": [
+          "target"
+        ]
+      }
+    },
     "landmark-roles": true,
     "required-h1": false,
     "wai-aria": true,

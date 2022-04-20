@@ -234,7 +234,7 @@ function getIconFromCardObj(cardObj) {
   return 'images/iconsMD/' + kebabed + '.png';
 }
 
-function createCardEntry(ratedCardObj) {
+function createCardEntryDOM(ratedCardObj) {
   /*
     * <li class="card card-liked" data-card-id="0841308">
     *   <img class="race" src="images/iconsMD/cyberse.png" alt="race icon">
@@ -258,6 +258,11 @@ function createCardEntry(ratedCardObj) {
     'data-card-id': ratedCardObj.id
   });
 
+  var $a = domUtils.createElement('a', {
+    href: 'https://db.ygoprodeck.com/card/?search=' + ratedCardObj.id,
+    target: '_blank'
+  });
+
   var $img = domUtils.createElement('img', {
     class: 'race',
     src: getIconFromCardObj(ratedCardObj),
@@ -270,19 +275,25 @@ function createCardEntry(ratedCardObj) {
 
   var $h3 = domUtils.createElement('h3', {}, ratedCardObj.name);
 
-  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + '] (' + ratedCardObj.archetype + ')';
+  var archetype = '';
+  if (ratedCardObj.race) {
+    archetype = ' (' + ratedCardObj.race + ')';
+  }
+
+  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']' + archetype;
 
   var $h4 = domUtils.createElement('h4', {}, h4TextContent);
 
   $cardText.append($h3, $h4);
-  $li.append($img, $cardText);
+  $a.append($img, $cardText);
+  $li.append($a);
 
   ratedCardObj.domElement = $li;
   return $li;
 }
 
 function prependToResultsView(card) {
-  $resultsList.prepend(createCardEntry(card));
+  $resultsList.prepend(createCardEntryDOM(card));
 }
 
 function redrawResultsView() {

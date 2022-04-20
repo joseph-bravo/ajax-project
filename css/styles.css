@@ -12,7 +12,8 @@
 }
 
 button,
-a {
+a,
+a > * {
   cursor: pointer;
 }
 
@@ -201,13 +202,16 @@ ul.results-list {
 
 li.card {
   all: unset;
+  width: 90%;
+}
+
+li.card a {
   font-stretch: semi-condensed;
   display: flex;
   justify-content: space-between;
   align-items: center;
   text-align: right;
   padding: 0.33rem;
-  width: 90%;
   background-color: var(--label-color);
   border-radius: 5px;
   box-shadow: var(--shadow);
@@ -242,11 +246,11 @@ li.card .card-text h4 {
   font-style: italic;
 }
 
-li.card-liked {
+li.card-liked a {
   background-color: var(--like-color);
 }
 
-li.card-disliked {
+li.card-disliked a {
   background-color: var(--dislike-color);
 }
 
