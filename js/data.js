@@ -43,6 +43,7 @@ var userData = {
 function Rating(id, rating) {
   this.id = id;
   this.rating = rating;
+  this.timeRated = Date.now();
 }
 
 function saveUserDataToStorage() {
@@ -79,6 +80,7 @@ function filterData() {
       var currentRating = userData.ratings[rating];
       if (element.id === currentRating.id) {
         element.rating = currentRating.rating;
+        element.timeRated = currentRating.timeRated;
         userCards.unshift(element);
         notIncluded = false;
         break;

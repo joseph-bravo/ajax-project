@@ -293,6 +293,8 @@ function redrawResultsView() {
 
 swapView(currentView);
 
+// * initializeSite() runs after data loads in.
+
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');
