@@ -277,10 +277,10 @@ function createCardEntryDOM(ratedCardObj) {
 
   var archetype = '';
   if (ratedCardObj.race) {
-    archetype = ' (' + ratedCardObj.race + ')';
+    archetype = '(' + ratedCardObj.race + ') ';
   }
 
-  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']' + archetype;
+  var h4TextContent = archetype + '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']';
 
   var $h4 = domUtils.createElement('h4', {}, h4TextContent);
 
