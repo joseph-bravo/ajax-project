@@ -14,6 +14,10 @@
 button,
 a {
   cursor: pointer;
+}
+
+button,
+header a {
   display: block;
 }
 
@@ -69,11 +73,8 @@ button {
   font-stretch: extra-condensed;
   font-size: 1.5rem;
   max-width: 600px;
-}
-
-.sort-options .label-block h3 {
-  font-size: 1.5rem;
-  font-weight: bold;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 .remaining-cards-block {
@@ -84,6 +85,7 @@ button {
 
 h2 {
   font-stretch: 66%;
+  font-weight: 400;
 }
 
 h3,
@@ -128,6 +130,10 @@ button.sort-button {
 .loading > *,
 button:disabled {
   filter: brightness(0.75);
+  cursor: default;
+}
+
+button.active {
   cursor: default;
 }
 
@@ -219,18 +225,21 @@ li.card .card-text {
   align-items: center;
 }
 
-li.card .card-text * {
+li.card .card-text h3,
+li.card .card-text h4 {
   display: block;
   flex-basis: 100%;
   line-height: 1em;
+  font-weight: normal;
 }
 
-li.card h3 {
+li.card .card-text h3 {
   font-size: 1.5rem;
 }
 
-li.card h4 {
+li.card .card-text h4 {
   font-size: 1rem;
+  font-style: italic;
 }
 
 li.card-liked {
@@ -248,19 +257,20 @@ li.card-disliked {
   padding-left: 10%;
   padding-right: 10%;
   max-width: 600px;
+  font-size: 1.5rem;
 }
 
 .sort-options-buttons {
   max-width: 100%;
 }
 
-main button[data-option="disliked"]:active,
-button[data-option="disliked"].active {
+main button[data-option="👎"]:active,
+button[data-option="👎"].active {
   background-color: var(--dislike-color);
 }
 
-main button[data-option="liked"]:active,
-button[data-option="liked"].active {
+main button[data-option="👍"]:active,
+button[data-option="👍"].active {
   background-color: var(--like-color);
 }
 

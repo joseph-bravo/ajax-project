@@ -291,6 +291,7 @@ function redrawResultsView() {
   });
 }
 
+//* Sorting Results View
 function resultsShowOnly(filter) {
   var toShow = userCardSort.filter(filter);
   userCards.forEach(function (element) {
@@ -311,6 +312,24 @@ function resultsOrder(direction) {
     element.domElement.style.order = index;
   });
 }
+
+var $sortButtons = document.querySelectorAll('.sort-button');
+
+function sortButtonHandler(event) {
+  $sortButtons.forEach(function (element) {
+    if (element === event.target) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  var selectedOption = event.target.dataset.option;
+  resultsShowOnly(selectedOption);
+}
+
+$sortButtons.forEach(function (element) {
+  element.addEventListener('click', sortButtonHandler);
+});
 
 //! Site Initialization
 
