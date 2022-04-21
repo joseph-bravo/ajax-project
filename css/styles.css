@@ -288,6 +288,9 @@ button[data-option="👍"].active {
 /** Archetype Header */
 button.archetype-header,
 .all-cards-header {
+  text-align: center;
+  background: var(--label-color);
+  border-radius: 5px;
   color: black;
   font-stretch: semi-condensed;
   font-size: 1.5rem;
@@ -295,13 +298,14 @@ button.archetype-header,
   width: 90%;
   margin: 0 auto;
   position: relative;
+  box-shadow: var(--shadow);
 }
 
 button.archetype-header:active {
   color: black;
 }
 
-button.archetype-header span {
+button.archetype-header i.archetype-header-control {
   position: absolute;
   top: 50%;
   transform: translateY(-050%);

@@ -82,6 +82,7 @@ function setLoading(bool) {
 
 //* Change displayed card
 function displayCard(card, animation) {
+  console.log(card);
   setLoading(true);
   setAnimation($imageContainer, animation);
 
@@ -97,6 +98,10 @@ function displayCard(card, animation) {
   card.id + '.jpg';
 
   $mainCardImage.src = croppedImageUrl;
+
+  $mainCardImage.addEventListener('error', function () {
+    $mainCardImage.src = card.card_images[0].image_url;
+  });
 
   $mainCardImage.addEventListener('load', function () {
     setLoading(false);
@@ -191,7 +196,8 @@ function rateCard(event) {
     currentCard.timeRated = Date.now();
     userData.ratings.unshift(rating);
     userCards.unshift(currentCard);
-    prependToResultsView(currentCard);
+    domUtils.createCardEntryDOM(currentCard);
+    $resultsList.prepend(currentCard.dom);
 
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
@@ -231,72 +237,8 @@ window.addEventListener('keydown', function (event) {
   }
 });
 
-//* Results card <li> DOM Creation
-function getIconFromCardObj(cardObj) {
-  var kebabed = _.kebabCase(cardObj.race);
-  return 'images/iconsMD/' + kebabed + '.png';
-}
-
-function createCardEntryDOM(ratedCardObj) {
-  /*
-    * <li class="card card-liked" data-card-id="0841308">
-    *   <img class="race" src="images/iconsMD/cyberse.png" alt="race icon">
-    *   <div class="card-text">
-    *     <h3>Card Name</h3>
-    *     <h4>Card Data</h4>
-    *   </div>
-    * </li>
-  */
-
-  var cardColor;
-
-  if (ratedCardObj.rating === '👍') {
-    cardColor = 'card-liked';
-  } else {
-    cardColor = 'card-disliked';
-  }
-
-  var $li = domUtils.createElement('li', {
-    class: 'card ' + cardColor,
-    'data-card-id': ratedCardObj.id
-  });
-
-  var $a = domUtils.createElement('a', {
-    href: 'https://db.ygoprodeck.com/card/?search=' + ratedCardObj.id,
-    target: '_blank'
-  });
-
-  var $img = domUtils.createElement('img', {
-    class: 'race',
-    src: getIconFromCardObj(ratedCardObj),
-    alt: ratedCardObj.race + ' icon'
-  });
-
-  var $cardText = domUtils.createElement('div', {
-    class: 'card-text'
-  });
-
-  var $h3 = domUtils.createElement('h3', {}, ratedCardObj.name);
-
-  var archetype = '';
-  if (ratedCardObj.race) {
-    archetype = '(' + ratedCardObj.race + ') ';
-  }
-
-  var h4TextContent = archetype + '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']';
-
-  var $h4 = domUtils.createElement('h4', {}, h4TextContent);
-
-  $cardText.append($h3, $h4);
-  $a.append($img, $cardText);
-  $li.append($a);
-
-  ratedCardObj.domElement = $li;
-  return $li;
-}
-
 function prependToResultsView(card) {
-  $resultsList.prepend(createCardEntryDOM(card));
+  $resultsList.prepend(domUtils.createCardEntryDOM(card));
 }
 
 function redrawResultsView() {
@@ -313,9 +255,9 @@ function resultsShowOnly(filter) {
   var toShow = userCardSort.filter(filter);
   userCards.forEach(function (element) {
     if (toShow.includes(element)) {
-      element.domElement.classList.remove('hidden');
+      element.dom.classList.remove('hidden');
     } else {
-      element.domElement.classList.add('hidden');
+      element.dom.classList.add('hidden');
     }
   });
 }
@@ -326,7 +268,7 @@ function resultsOrder(direction) {
     sortOrder.reverse();
   }
   sortOrder.forEach(function (element, index) {
-    element.domElement.style.order = index;
+    element.dom.style.order = index;
   });
 }
 

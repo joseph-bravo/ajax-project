@@ -2,9 +2,11 @@
 /* exported cardData */
 /* exported userCardSort */
 /* global initializeSite */
+/* global domUtils */
 
 //! Initialize ALL Data
-// pullAllCardData();
+pullAllCardData();
+// pullAllArchetypeData();
 
 //! Reset Data
 var resetting = false;
@@ -32,6 +34,20 @@ function pullAllCardData() {
     loadUserDataFromStorage();
     filterData();
     initializeSite();
+  });
+}
+
+var rawArchetypeData = [];
+
+function pullAllArchetypeData() {
+  var archetypeXHR = new XMLHttpRequest();
+  archetypeXHR.open('GET', 'https://db.ygoprodeck.com/api/v7/archetypes.php');
+  archetypeXHR.responseType = 'json';
+  archetypeXHR.send();
+  archetypeXHR.addEventListener('load', function () {
+    console.log('archetypeXHR output:', archetypeXHR.response);
+    rawArchetypeData = archetypeXHR.response;
+    createAllArchetypes();
   });
 }
 
@@ -128,3 +144,20 @@ function filterData() {
 }
 
 window.addEventListener('unload', saveUserDataToStorage);
+
+//! Create Archetype DOMs
+
+var allArchetypes = [];
+
+function Archetype(name, id) {
+  this.name = name;
+  this.id = id;
+  this.dom = createArchetypeDOM(this);
+}
+
+function createAllArchetypes() {
+  rawArchetypeData.forEach(function (element, index) {
+    allArchetypes.push(new Archetype(element.archetype_name, index));
+  });
+  console.log(allArchetypes);
+}
