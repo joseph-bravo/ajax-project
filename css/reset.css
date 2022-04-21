@@ -8,7 +8,9 @@ button {
   padding: 0;
 }
 
-a {
+a,
+li,
+ul {
   all: unset;
   display: block;
 }
