@@ -3,6 +3,7 @@
 /* global remainingCards */
 /* global userCards */
 /* global userCardSort */
+/* global allArchetypes */
 /* global domUtils */
 /* global _ */
 
@@ -82,7 +83,6 @@ function setLoading(bool) {
 
 //* Change displayed card
 function displayCard(card, animation) {
-  console.log(card);
   setLoading(true);
   setAnimation($imageContainer, animation);
 
@@ -100,6 +100,11 @@ function displayCard(card, animation) {
   $mainCardImage.src = croppedImageUrl;
 
   $mainCardImage.addEventListener('error', function () {
+    var fallback = card.card_images[0].image_url;
+    if (!fallback) {
+      $mainCardImage.src = 'images/placeholder.png';
+      return;
+    }
     $mainCardImage.src = card.card_images[0].image_url;
   });
 
@@ -247,6 +252,9 @@ function redrawResultsView() {
   }
   userCards.forEach(function (element) {
     prependToResultsView(element);
+  });
+  allArchetypes.forEach(function (element) {
+    $resultsList.prepend(element.dom);
   });
 }
 

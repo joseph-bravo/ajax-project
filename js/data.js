@@ -6,7 +6,7 @@
 
 //! Initialize ALL Data
 pullAllCardData();
-// pullAllArchetypeData();
+pullAllArchetypeData();
 
 //! Reset Data
 var resetting = false;
@@ -152,7 +152,8 @@ var allArchetypes = [];
 function Archetype(name, id) {
   this.name = name;
   this.id = id;
-  this.dom = createArchetypeDOM(this);
+  this.dom = domUtils.createArchetypeDOM(this);
+  this.expanded = false;
 }
 
 function createAllArchetypes() {

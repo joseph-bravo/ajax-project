@@ -43,10 +43,10 @@ var domUtils = {
       archetype.name
     );
     var $archetypeHeaderControl = this.createElement('i', {
-      class: 'archetype-header-control fas fa-minus-square'
+      class: 'archetype-header-control fas fa-plus-square'
     });
     var $cardList = this.createElement('ul', {
-      class: 'card-list'
+      class: 'card-list hidden'
     });
 
     $outerList.append($header, $cardList);
