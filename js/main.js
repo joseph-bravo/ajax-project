@@ -214,6 +214,7 @@ function rateCard(event) {
 $ratingButtons.addEventListener('click', rateCard);
 
 // ? Bind keyboard to buttons
+
 window.addEventListener('keydown', function (event) {
   switch (event.key) {
     case ' ':
@@ -244,8 +245,6 @@ window.addEventListener('keydown', function (event) {
 });
 
 // ? Sorting Results View
-
-// !-----------------------------------
 
 var options = {
   viewRatings: 'all',
@@ -340,6 +339,7 @@ function resultsOptionsHandler(event) {
     redrawButtons();
   }
 }
+
 var $resultsOptions = document.querySelector('.results-options');
 $resultsOptions.addEventListener('click', resultsOptionsHandler);
 
@@ -381,29 +381,33 @@ function resultsOrder(direction) {
   });
 }
 
-// !-----------------------------------
-// function rearrangeResults() {
-//   while ($resultsList.children.length > 0) {
-//     $resultsList.children[0].remove();
-//   }
-//   userCards.forEach(function (element) {
-//     prependToResultsView(element);
-//   });
-//   allArchetypes.forEach(function (element) {
-//     if (element.archetypeUserCards.length > 0) {
-//       element.dom.dataset.empty = 'false';
-//     } else {
-//       element.dom.dataset.empty = 'true';
-//     }
-//     $resultsList.prepend(element.dom);
-//     element.archetypeUserCards.forEach(function (cardInArchetype) {
-//       element.domCardList.prepend(cardInArchetype.dom);
-//     });
-//   });
-// }
+// ? Header Button Handler
 
-// !-----------------------------------
-//! Site Initialization
+// !------------------
+
+function headerButtonHandler(event) {
+  if (event.target.matches('button.archetype-header, button.archetype-header i')) {
+    var $archetypeToToggle = event.target.closest('[data-archetype-id]');
+    var $icon = $archetypeToToggle.querySelector('i');
+    console.log($icon.classList);
+    console.log($archetypeToToggle);
+    if ($archetypeToToggle.dataset.expanded === 'true') {
+      $icon.classList.remove('fa-minus-square');
+      $icon.classList.add('fa-plus-square');
+      $archetypeToToggle.dataset.expanded = false;
+    } else {
+      $icon.classList.remove('fa-plus-square');
+      $icon.classList.add('fa-minus-square');
+      $archetypeToToggle.dataset.expanded = true;
+    }
+  }
+}
+
+$resultsList.addEventListener('click', headerButtonHandler);
+
+// !------------------
+
+// ? Site Initialization
 
 swapView(currentView);
 

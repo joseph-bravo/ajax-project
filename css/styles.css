@@ -322,7 +322,7 @@ button.archetype-header i.archetype-header-control {
 }
 
 li[data-expanded="false"].archetype ul.card-list {
-  /* display: none; */
+  display: none;
 }
 
 li[data-empty="true"].archetype {

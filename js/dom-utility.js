@@ -1,4 +1,5 @@
 /* exported domUtils */
+/* global _ */
 
 var domUtils = {
   createElement: function (tagName, attributesObject, txtContent) {
