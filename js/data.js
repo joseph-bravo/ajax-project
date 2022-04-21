@@ -6,7 +6,6 @@
 
 //! Initialize ALL Data
 pullAllCardData();
-pullAllArchetypeData();
 
 //! Reset Data
 var resetting = false;
@@ -20,6 +19,7 @@ function resetData() {
 
 //! Initialize Raw Card Data from API
 var rawData = [];
+var rawArchetypeData = [];
 
 function pullAllCardData() {
   var cardXHR = new XMLHttpRequest();
@@ -33,11 +33,9 @@ function pullAllCardData() {
     rawData = cardXHR.response.data;
     loadUserDataFromStorage();
     filterData();
-    initializeSite();
+    pullAllArchetypeData();
   });
 }
-
-var rawArchetypeData = [];
 
 function pullAllArchetypeData() {
   var archetypeXHR = new XMLHttpRequest();
@@ -45,9 +43,9 @@ function pullAllArchetypeData() {
   archetypeXHR.responseType = 'json';
   archetypeXHR.send();
   archetypeXHR.addEventListener('load', function () {
-    console.log('archetypeXHR output:', archetypeXHR.response);
     rawArchetypeData = archetypeXHR.response;
     createAllArchetypes();
+    initializeSite();
   });
 }
 
@@ -152,13 +150,36 @@ var allArchetypes = [];
 function Archetype(name, id) {
   this.name = name;
   this.id = id;
-  this.dom = domUtils.createArchetypeDOM(this);
   this.expanded = false;
+  this.archetypeUserCards = getCardsThatMatchArchetype(name);
+  this.dom = domUtils.createArchetypeDOM(this);
+  this.domCardList = this.dom.querySelector('.card-list');
+  this.dom.dataset.empty = this.archetypeUserCards.length > 0;
+}
+
+function ArchetypeNone() {
+  this.name = 'No Archetype';
+  this.id = -1;
+  this.expanded = false;
+  this.archetypeUserCards = getCardsThatMatchArchetype(undefined);
+  this.dom = domUtils.createArchetypeDOM(this);
+  this.domCardList = this.dom.querySelector('.card-list');
+  this.dom.dataset.empty = this.archetypeUserCards.length > 0;
+}
+
+function getArchetype(name) {
+  return allArchetypes.find(function (element) {
+    return element.name === name;
+  });
+}
+
+function getCardsThatMatchArchetype(archetypeName) {
+  return userCards.filter(function (element) { return element.archetype === archetypeName; });
 }
 
 function createAllArchetypes() {
+  allArchetypes.push(new ArchetypeNone());
   rawArchetypeData.forEach(function (element, index) {
     allArchetypes.push(new Archetype(element.archetype_name, index));
   });
-  console.log(allArchetypes);
 }

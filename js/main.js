@@ -34,7 +34,7 @@ var resultOptionView = 'all';
 var resultOptionArchetype = 'hide';
 var resultOptionOrder = 'recent';
 
-//* View Swapping
+// ? View Swapping
 function swapView(switchToView) {
   if (currentView === switchToView) {
     return;
@@ -60,7 +60,7 @@ for (var i = 0; i < $navLinks.length; i++) {
   });
 }
 
-//* Change loading state
+// ? Change loading state
 function setLoading(bool) {
   if (bool) {
     currentlyLoading = true;
@@ -81,7 +81,7 @@ function setLoading(bool) {
   }
 }
 
-//* Change displayed card
+// ? Change displayed card
 function displayCard(card, animation) {
   setLoading(true);
   setAnimation($imageContainer, animation);
@@ -120,7 +120,7 @@ function displayCard(card, animation) {
   });
 }
 
-//* Animation Handlers
+// ? Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
   likeCard: 'animate__backOutRight',
@@ -169,7 +169,7 @@ function animationEndHandler(event) {
 }
 $imageContainer.addEventListener('animationend', animationEndHandler);
 
-//* New Card button.
+// ? New Card button.
 function drawNewCard(action) {
   currentCard = _.sample(remainingCards);
   displayCard(currentCard, action);
@@ -182,7 +182,7 @@ $newCardButton.addEventListener('click', function () {
   drawNewCard('discard');
 });
 
-//* Like/Dislike buttons
+// ? Like/Dislike buttons
 var $ratingButtons = document.querySelector('.rating-buttons');
 function rateCard(event) {
   if (currentlyLoading) {
@@ -212,7 +212,7 @@ function rateCard(event) {
 }
 $ratingButtons.addEventListener('click', rateCard);
 
-//* Bind keyboard to buttons
+// ? Bind keyboard to buttons
 window.addEventListener('keydown', function (event) {
   switch (event.key) {
     case ' ':
@@ -254,11 +254,19 @@ function redrawResultsView() {
     prependToResultsView(element);
   });
   allArchetypes.forEach(function (element) {
+    if (element.archetypeUserCards.length > 0) {
+      element.dom.dataset.empty = 'false';
+    } else {
+      element.dom.dataset.empty = 'true';
+    }
     $resultsList.prepend(element.dom);
+    element.archetypeUserCards.forEach(function (cardInArchetype) {
+      element.domCardList.prepend(cardInArchetype.dom);
+    });
   });
 }
 
-//* Sorting Results View
+// ? Sorting Results View
 function resultsShowOnly(filter) {
   var toShow = userCardSort.filter(filter);
   userCards.forEach(function (element) {
@@ -304,8 +312,7 @@ var $viewAllButton = document.querySelector('[data-option="all"]');
 
 swapView(currentView);
 
-// * initializeSite() runs after data loads in.
-
+// ? initializeSite() runs after data loads in.
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');

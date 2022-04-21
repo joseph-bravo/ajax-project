@@ -313,6 +313,14 @@ button.archetype-header i.archetype-header-control {
   right: 0.75rem;
 }
 
+li[data-expanded="false"].archetype ul.card-list {
+  display: none;
+}
+
+li[data-empty="true"].archetype {
+  display: none;
+}
+
 /** media queries */
 @media only screen and (min-width: 800px) {
   li.card {

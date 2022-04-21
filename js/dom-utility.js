@@ -33,7 +33,9 @@ var domUtils = {
     */
     var $outerList = this.createElement('li', {
       'data-archetype-id': archetype.id,
-      class: 'archetype'
+      class: 'archetype',
+      'data-expanded': 'false',
+      'data-empty': true
     });
     var $header = this.createElement(
       'button',
@@ -46,7 +48,7 @@ var domUtils = {
       class: 'archetype-header-control fas fa-plus-square'
     });
     var $cardList = this.createElement('ul', {
-      class: 'card-list hidden'
+      class: 'card-list'
     });
 
     $outerList.append($header, $cardList);
@@ -96,8 +98,8 @@ var domUtils = {
     var $h3 = this.createElement('h3', {}, ratedCardObj.name);
 
     var archetype = '';
-    if (ratedCardObj.race) {
-      archetype = '(' + ratedCardObj.race + ') ';
+    if (ratedCardObj.archetype) {
+      archetype = '(' + ratedCardObj.archetype + ') ';
     }
 
     var h4TextContent =
