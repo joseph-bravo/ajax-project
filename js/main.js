@@ -27,6 +27,7 @@ var $dislikeButton = document.querySelector('.dislike-button');
 
 var $resultsList = document.querySelector('ul.results-list');
 var $allCardsList = document.querySelector('li.all-cards .card-list');
+var $allCardsContainer = document.querySelector('li.all-cards');
 
 var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
@@ -40,6 +41,7 @@ function swapView(switchToView) {
   }
 
   if (switchToView === 'results') {
+    redrawButtons();
     rearrangeResults();
   }
 
@@ -93,8 +95,9 @@ function displayCard(card, animation) {
   }
 
   var croppedImageUrl =
-  'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
-  card.id + '.jpg';
+    'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
+    card.id +
+    '.jpg';
 
   $mainCardImage.src = croppedImageUrl;
 
@@ -153,7 +156,6 @@ function setAnimation(target, animation) {
       $mainCardDisplay.classList.remove('liked', 'disliked');
       animationToSet = motions.displayCard;
       break;
-
   }
   target.classList.add(animationToSet);
 }
@@ -241,13 +243,8 @@ window.addEventListener('keydown', function (event) {
   }
 });
 
-// ? Results View Drawing
-
-function prependToResultsView(card) {
-  $resultsList.prepend(card.dom);
-}
-
 // ? Sorting Results View
+
 // !-----------------------------------
 
 var options = {
@@ -261,24 +258,127 @@ var options = {
 };
 
 function rearrangeResults() {
-  $resultsList.textContent = '';
+  domUtils.removeAllChildren($resultsList);
+  domUtils.removeAllChildren($allCardsList);
   $resultsList.dataset.viewArchetype = options.viewArchetype;
   if (options.viewArchetype) {
     allArchetypes.forEach(function (element) {
-      element.dom.dataset.empty = (element.isEmpty());
+      element.domCardList.textContent = '';
+      element.dom.dataset.empty = element.isEmpty();
       if (element.isEmpty()) {
         return;
       }
-      element.archetypeUserCards.forEach(function (card) {
-        element.domCardList.prepend(card.dom);
-      });
+      if (options.viewRatings === 'all') {
+        element.archetypeUserCards.forEach(function (card) {
+          element.domCardList.prepend(card.dom);
+        });
+      } else {
+        var stillEmpty = true;
+        element.archetypeUserCards.forEach(function (card) {
+          if (card.rating === options.viewRatings) {
+            element.domCardList.prepend(card.dom);
+            stillEmpty = false;
+          }
+        });
+      }
+      if (stillEmpty) {
+        return;
+      }
       $resultsList.append(element.dom);
     });
   } else {
-    userCards.forEach(function (element) {
-      $allCardsList.prepend(element.dom);
-    });
+    if (options.viewRatings === 'all') {
+      userCards.forEach(function (card) {
+        $allCardsList.prepend(card.dom);
+      });
+    } else {
+      userCards.forEach(function (card) {
+        if (card.rating === options.viewRatings) {
+          $allCardsList.prepend(card.dom);
+        }
+      });
+    }
+    $resultsList.append($allCardsContainer);
   }
+  if (options.sortOrder === 'recent') {
+    resultsOrder('reverse');
+  } else {
+    resultsOrder();
+  }
+}
+
+function resultsOptionsHandler(event) {
+  if (event.target.matches('button')) {
+    switch (event.target.dataset.option) {
+      //* View Ratings
+      case '👎':
+        options.set('viewRatings', '👎');
+        break;
+      case 'all':
+        options.set('viewRatings', 'all');
+        break;
+      case '👍':
+        options.set('viewRatings', '👍');
+        break;
+
+        //* View Archetype
+      case 'false':
+        options.set('viewArchetype', false);
+        break;
+      case 'true':
+        options.set('viewArchetype', true);
+        break;
+
+      //* Sort Order
+      case 'recent':
+        options.set('sortOrder', 'recent');
+        break;
+      case 'oldest':
+        options.set('sortOrder', 'oldest');
+        break;
+    }
+    redrawButtons();
+  }
+}
+var $resultsOptions = document.querySelector('.results-options');
+$resultsOptions.addEventListener('click', resultsOptionsHandler);
+
+var $viewButtons = document.querySelectorAll('.view-button');
+var $archetypeButtons = document.querySelectorAll('.archetype-button');
+var $orderButtons = document.querySelectorAll('.order-button');
+
+function redrawButtons() {
+  $viewButtons.forEach(function (element) {
+    if (element.dataset.option === options.viewRatings) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  $archetypeButtons.forEach(function (element) {
+    if (element.dataset.option === JSON.stringify(options.viewArchetype)) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  $orderButtons.forEach(function (element) {
+    if (element.dataset.option === options.sortOrder) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+}
+
+function resultsOrder(direction) {
+  var sortOrder = userCardSort.recent();
+  if (direction === 'reverse') {
+    sortOrder.reverse();
+  }
+  sortOrder.forEach(function (element, index) {
+    element.dom.style.order = index;
+  });
 }
 
 // !-----------------------------------
@@ -303,47 +403,6 @@ function rearrangeResults() {
 // }
 
 // !-----------------------------------
-function resultsShowOnly(filter) {
-  var toShow = userCardSort.filter(filter);
-  userCards.forEach(function (element) {
-    if (toShow.includes(element)) {
-      element.dom.classList.remove('hidden');
-    } else {
-      element.dom.classList.add('hidden');
-    }
-  });
-}
-
-function resultsOrder(direction) {
-  var sortOrder = userCardSort.recent();
-  if (direction === 'reverse') {
-    sortOrder.reverse();
-  }
-  sortOrder.forEach(function (element, index) {
-    element.dom.style.order = index;
-  });
-}
-
-var $viewRatingButtons = document.querySelectorAll('.view-button');
-
-function viewRatingButtonHandler(event) {
-  options.viewRatings = event.target.dataset.option;
-  $viewRatingButtons.forEach(function (element) {
-    if (element.dataset.option === options.viewRatings) {
-      element.classList.add('active');
-    } else {
-      element.classList.remove('active');
-    }
-  });
-  resultsShowOnly(options.viewRatings);
-}
-
-$viewRatingButtons.forEach(function (element) {
-  element.addEventListener('click', viewRatingButtonHandler);
-});
-
-var $viewAllButton = document.querySelector('[data-option="all"]');
-
 //! Site Initialization
 
 swapView(currentView);
@@ -355,7 +414,6 @@ function initializeSite() {
   setLoading(true);
   rearrangeResults();
   resultsOrder('reverse');
-  $viewAllButton.click();
   swapView('rating');
   drawNewCard();
 }

@@ -132,6 +132,9 @@ var userCardSort = {
 
 function filterData() {
   rawData.forEach(function (element, index) {
+    if (!element.archetype) {
+      element.archetype = 'No Archetype';
+    }
     var notIncluded = false;
     for (var rating = 0; rating < userData.ratings.length; rating++) {
       var currentRating = userData.ratings[rating];
@@ -156,7 +159,7 @@ window.addEventListener('unload', saveUserDataToStorage);
 
 var allArchetypes = [];
 
-function Archetype(name, id) {
+function Archetype(name) {
   this.name = name;
   this.expanded = false;
   this.archetypeUserCards = getCardsThatMatchArchetype(name);
@@ -176,7 +179,7 @@ Archetype.prototype.isEmpty = function () {
 function ArchetypeNone() {
   this.name = 'No Archetype';
   this.expanded = false;
-  this.archetypeUserCards = getCardsThatMatchArchetype(undefined);
+  this.archetypeUserCards = getCardsThatMatchArchetype('No Archetype');
   this.dom = domUtils.createArchetypeDOM(this);
   this.domCardList = this.dom.querySelector('.card-list');
   this.dom.dataset.empty = this.archetypeUserCards.length > 0;
@@ -201,8 +204,8 @@ function getCardsThatMatchArchetype(archetypeName) {
 }
 
 function createAllArchetypes() {
-  rawArchetypeData.forEach(function (element, index) {
-    allArchetypes.push(new Archetype(element.archetype_name, index));
+  rawArchetypeData.forEach(function (element) {
+    allArchetypes.push(new Archetype(element.archetype_name));
   });
   allArchetypes.push(new ArchetypeNone());
 }

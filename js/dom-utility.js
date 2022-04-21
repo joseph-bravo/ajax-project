@@ -32,7 +32,7 @@ var domUtils = {
       </li>
     */
     var $outerList = this.createElement('li', {
-      'data-archetype-id': archetype.id,
+      'data-archetype-id': archetype.name,
       class: 'archetype',
       'data-expanded': 'false',
       'data-empty': true
@@ -117,5 +117,10 @@ var domUtils = {
   getIconFromCardObj: function (cardObj) {
     var kebabed = _.kebabCase(cardObj.race);
     return 'images/iconsMD/' + kebabed + '.png';
+  },
+  removeAllChildren: function (DOMelement) {
+    while (DOMelement.children.length > 0) {
+      DOMelement.children[0].remove();
+    }
   }
 };
