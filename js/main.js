@@ -4,6 +4,8 @@
 /* global userCards */
 /* global userCardSort */
 /* global allArchetypes */
+/* global Card */
+/* global getArchetype */
 /* global domUtils */
 /* global _ */
 
@@ -24,15 +26,12 @@ var $likeButton = document.querySelector('.like-button');
 var $dislikeButton = document.querySelector('.dislike-button');
 
 var $resultsList = document.querySelector('ul.results-list');
+var $allCardsList = document.querySelector('li.all-cards .card-list');
 
 var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
-
-var resultOptionView = 'all';
-var resultOptionArchetype = 'hide';
-var resultOptionOrder = 'recent';
 
 // ? View Swapping
 function swapView(switchToView) {
@@ -41,7 +40,7 @@ function swapView(switchToView) {
   }
 
   if (switchToView === 'results') {
-    resultsShowOnly(resultOptionView);
+    rearrangeResults();
   }
 
   for (var i = 0; i < $views.length; i++) {
@@ -198,11 +197,11 @@ function rateCard(event) {
       rating = new Rating(currentCard.id, '👎');
       currentCard.rating = '👎';
     }
-    currentCard.timeRated = Date.now();
+    var newCard = new Card(currentCard, rating.rating, Date.now);
     userData.ratings.unshift(rating);
-    userCards.unshift(currentCard);
-    domUtils.createCardEntryDOM(currentCard);
-    $resultsList.prepend(currentCard.dom);
+    userCards.unshift(newCard);
+
+    getArchetype(newCard.archetype).archetypeUserCards.push(newCard);
 
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
@@ -242,31 +241,68 @@ window.addEventListener('keydown', function (event) {
   }
 });
 
-function prependToResultsView(card) {
-  $resultsList.prepend(domUtils.createCardEntryDOM(card));
-}
+// ? Results View Drawing
 
-function redrawResultsView() {
-  while ($resultsList.children.length > 0) {
-    $resultsList.children[0].remove();
-  }
-  userCards.forEach(function (element) {
-    prependToResultsView(element);
-  });
-  allArchetypes.forEach(function (element) {
-    if (element.archetypeUserCards.length > 0) {
-      element.dom.dataset.empty = 'false';
-    } else {
-      element.dom.dataset.empty = 'true';
-    }
-    $resultsList.prepend(element.dom);
-    element.archetypeUserCards.forEach(function (cardInArchetype) {
-      element.domCardList.prepend(cardInArchetype.dom);
-    });
-  });
+function prependToResultsView(card) {
+  $resultsList.prepend(card.dom);
 }
 
 // ? Sorting Results View
+// !-----------------------------------
+
+var options = {
+  viewRatings: 'all',
+  viewArchetype: true,
+  sortOrder: 'recent',
+  set: function (option, value) {
+    this[option] = value;
+    rearrangeResults();
+  }
+};
+
+function rearrangeResults() {
+  $resultsList.textContent = '';
+  $resultsList.dataset.viewArchetype = options.viewArchetype;
+  if (options.viewArchetype) {
+    allArchetypes.forEach(function (element) {
+      element.dom.dataset.empty = (element.isEmpty());
+      if (element.isEmpty()) {
+        return;
+      }
+      element.archetypeUserCards.forEach(function (card) {
+        element.domCardList.prepend(card.dom);
+      });
+      $resultsList.append(element.dom);
+    });
+  } else {
+    userCards.forEach(function (element) {
+      $allCardsList.prepend(element.dom);
+    });
+  }
+}
+
+// !-----------------------------------
+// function rearrangeResults() {
+//   while ($resultsList.children.length > 0) {
+//     $resultsList.children[0].remove();
+//   }
+//   userCards.forEach(function (element) {
+//     prependToResultsView(element);
+//   });
+//   allArchetypes.forEach(function (element) {
+//     if (element.archetypeUserCards.length > 0) {
+//       element.dom.dataset.empty = 'false';
+//     } else {
+//       element.dom.dataset.empty = 'true';
+//     }
+//     $resultsList.prepend(element.dom);
+//     element.archetypeUserCards.forEach(function (cardInArchetype) {
+//       element.domCardList.prepend(cardInArchetype.dom);
+//     });
+//   });
+// }
+
+// !-----------------------------------
 function resultsShowOnly(filter) {
   var toShow = userCardSort.filter(filter);
   userCards.forEach(function (element) {
@@ -291,15 +327,15 @@ function resultsOrder(direction) {
 var $viewRatingButtons = document.querySelectorAll('.view-button');
 
 function viewRatingButtonHandler(event) {
-  resultOptionView = event.target.dataset.option;
+  options.viewRatings = event.target.dataset.option;
   $viewRatingButtons.forEach(function (element) {
-    if (element.dataset.option === resultOptionView) {
+    if (element.dataset.option === options.viewRatings) {
       element.classList.add('active');
     } else {
       element.classList.remove('active');
     }
   });
-  resultsShowOnly(resultOptionView);
+  resultsShowOnly(options.viewRatings);
 }
 
 $viewRatingButtons.forEach(function (element) {
@@ -317,7 +353,7 @@ swapView(currentView);
 function initializeSite() {
   $main.classList.remove('hidden');
   setLoading(true);
-  redrawResultsView();
+  rearrangeResults();
   resultsOrder('reverse');
   $viewAllButton.click();
   swapView('rating');

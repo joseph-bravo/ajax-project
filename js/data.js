@@ -1,6 +1,7 @@
 /* exported data */
 /* exported cardData */
 /* exported userCardSort */
+/* exported getArchetype */
 /* global initializeSite */
 /* global domUtils */
 
@@ -53,6 +54,15 @@ function pullAllArchetypeData() {
 var userData = {
   ratings: []
 };
+
+function Card(cardobj, rating, timeRated) {
+  for (var prop in cardobj) {
+    this[prop] = cardobj[prop];
+  }
+  this.rating = rating;
+  this.timeRated = timeRated;
+  this.dom = domUtils.createCardEntryDOM(this);
+}
 
 /* exported Rating */
 function Rating(id, rating) {
@@ -126,9 +136,8 @@ function filterData() {
     for (var rating = 0; rating < userData.ratings.length; rating++) {
       var currentRating = userData.ratings[rating];
       if (element.id === currentRating.id) {
-        element.rating = currentRating.rating;
-        element.timeRated = currentRating.timeRated;
-        userCards.unshift(element);
+        var newUserCard = new Card(element, currentRating.rating, currentRating.timeRated);
+        userCards.unshift(newUserCard);
         notIncluded = false;
         break;
       } else {
@@ -149,7 +158,6 @@ var allArchetypes = [];
 
 function Archetype(name, id) {
   this.name = name;
-  this.id = id;
   this.expanded = false;
   this.archetypeUserCards = getCardsThatMatchArchetype(name);
   this.dom = domUtils.createArchetypeDOM(this);
@@ -157,15 +165,30 @@ function Archetype(name, id) {
   this.dom.dataset.empty = this.archetypeUserCards.length > 0;
 }
 
+Archetype.prototype.isEmpty = function () {
+  if (this.archetypeUserCards.length > 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
 function ArchetypeNone() {
   this.name = 'No Archetype';
-  this.id = -1;
   this.expanded = false;
   this.archetypeUserCards = getCardsThatMatchArchetype(undefined);
   this.dom = domUtils.createArchetypeDOM(this);
   this.domCardList = this.dom.querySelector('.card-list');
   this.dom.dataset.empty = this.archetypeUserCards.length > 0;
 }
+
+ArchetypeNone.prototype.isEmpty = function () {
+  if (this.archetypeUserCards.length > 0) {
+    return false;
+  } else {
+    return true;
+  }
+};
 
 function getArchetype(name) {
   return allArchetypes.find(function (element) {
@@ -178,8 +201,8 @@ function getCardsThatMatchArchetype(archetypeName) {
 }
 
 function createAllArchetypes() {
-  allArchetypes.push(new ArchetypeNone());
   rawArchetypeData.forEach(function (element, index) {
     allArchetypes.push(new Archetype(element.archetype_name, index));
   });
+  allArchetypes.push(new ArchetypeNone());
 }

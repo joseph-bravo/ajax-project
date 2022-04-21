@@ -285,6 +285,14 @@ button[data-option="👍"].active {
   border-top: 2px solid var(--button-color);
 }
 
+[data-view-archetype="false"].results-list .archetype {
+  display: none;
+}
+
+[data-view-archetype="true"].results-list .all-cards {
+  display: none;
+}
+
 /** Archetype Header */
 button.archetype-header,
 .all-cards-header {
@@ -314,7 +322,7 @@ button.archetype-header i.archetype-header-control {
 }
 
 li[data-expanded="false"].archetype ul.card-list {
-  display: none;
+  /* display: none; */
 }
 
 li[data-empty="true"].archetype {
