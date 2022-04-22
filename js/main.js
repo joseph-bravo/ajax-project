@@ -597,6 +597,9 @@ $deleteConfirmationModal.addEventListener('click', function (event) {
 });
 
 function deleteUserCard(card) {
+  var indexOfDataToDelete = userData.ratings.indexOf(userData.ratings.find(function (element) { return element.id === card.id; }));
+  userData.ratings.splice(indexOfDataToDelete);
+
   var indexOfCardToDelete = userCards.indexOf(userCards.find(function (element) { return element === card; }));
   var cardToReplace = rawData.find(function (element) { return element.id === card.id; });
   userCards.splice(indexOfCardToDelete, 1);
