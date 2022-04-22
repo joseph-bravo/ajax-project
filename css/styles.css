@@ -282,7 +282,6 @@ button[data-option="👍"].active {
 
 .results-list {
   margin-top: 2rem;
-  border-top: 2px solid var(--button-color);
 }
 
 [data-view-archetype="false"].results-list .archetype {
@@ -291,6 +290,10 @@ button[data-option="👍"].active {
 
 [data-view-archetype="true"].results-list .all-cards {
   display: none;
+}
+
+.collapse-button {
+  width: clamp(0px, 60%, 550px);
 }
 
 /** Archetype Header */

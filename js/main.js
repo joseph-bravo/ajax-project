@@ -304,6 +304,7 @@ function rearrangeResults() {
   } else {
     resultsOrder();
   }
+  toggleAllArchetypes(false);
 }
 
 function resultsOptionsHandler(event) {
@@ -383,29 +384,82 @@ function resultsOrder(direction) {
 
 // ? Header Button Handler
 
-// !------------------
-
 function headerButtonHandler(event) {
   if (event.target.matches('button.archetype-header, button.archetype-header i')) {
     var $archetypeToToggle = event.target.closest('[data-archetype-id]');
-    var $icon = $archetypeToToggle.querySelector('i');
-    console.log($icon.classList);
-    console.log($archetypeToToggle);
+
     if ($archetypeToToggle.dataset.expanded === 'true') {
-      $icon.classList.remove('fa-minus-square');
-      $icon.classList.add('fa-plus-square');
-      $archetypeToToggle.dataset.expanded = false;
+      toggleHeader($archetypeToToggle, false);
     } else {
-      $icon.classList.remove('fa-plus-square');
-      $icon.classList.add('fa-minus-square');
-      $archetypeToToggle.dataset.expanded = true;
+      toggleHeader($archetypeToToggle, true);
     }
+
   }
 }
 
 $resultsList.addEventListener('click', headerButtonHandler);
 
-// !------------------
+function toggleHeader(target, bool) {
+  var $icon = target.querySelector('i');
+  if (bool) {
+    $icon.classList.remove('fa-plus-square');
+    $icon.classList.add('fa-minus-square');
+    target.dataset.expanded = true;
+    getArchetype(target.dataset.archetypeId).expanded = true;
+  } else {
+    $icon.classList.remove('fa-minus-square');
+    $icon.classList.add('fa-plus-square');
+    target.dataset.expanded = false;
+    getArchetype(target.dataset.archetypeId).expanded = false;
+  }
+  updateCollapseButtonText();
+}
+
+// ? Collapse All button handler
+
+//! ------------------
+
+var $collapseButton = document.querySelector('.collapse-button');
+
+function getAllVisibleArchetypes() {
+  return document.querySelectorAll('.archetype');
+}
+
+function areAnyExpanded() {
+  var allVisible = getAllVisibleArchetypes();
+  for (var i = 0; i < allVisible.length; i++) {
+    if (allVisible[i].dataset.expanded === 'true') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function toggleAllArchetypes(bool) {
+  getAllVisibleArchetypes().forEach(function (element) {
+    toggleHeader(element, bool);
+  });
+  updateCollapseButtonText();
+
+}
+
+function updateCollapseButtonText() {
+  if (areAnyExpanded()) {
+    $collapseButton.textContent = 'Collapse All';
+  } else {
+    $collapseButton.textContent = 'Uncollapse All';
+  }
+}
+
+$collapseButton.addEventListener('click', function () {
+  if (areAnyExpanded()) {
+    toggleAllArchetypes(false);
+  } else {
+    toggleAllArchetypes(true);
+  }
+});
+
+//! ------------------
 
 // ? Site Initialization
 
