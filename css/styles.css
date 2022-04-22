@@ -303,7 +303,7 @@ li.card-disliked a {
 
 li.card.selected {
   filter: brightness(1.2);
-  outline: 5px solid white;
+  outline: 5px solid black;
   border-radius: 5px;
 }
 
@@ -388,7 +388,7 @@ li[data-empty="true"].archetype {
 dialog {
   margin: auto;
   border: 0;
-  background-color: var(--label-color);
+  background-color: var(--bg-color);
   border-radius: 5px;
   padding: 0;
 }
