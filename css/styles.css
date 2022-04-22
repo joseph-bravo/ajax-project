@@ -293,7 +293,8 @@ button[data-option="👍"].active {
 }
 
 .collapse-button {
-  width: clamp(0px, 60%, 550px);
+  padding: 0.5rem;
+  width: clamp(0px, 80%, 550px);
 }
 
 /** Archetype Header */
@@ -347,8 +348,9 @@ li[data-empty="true"].archetype {
   }
 
   button.archetype-header,
-  .all-cards-header {
-    width: 40%;
+  .all-cards-header,
+  .collapse-button {
+    width: 60%;
   }
 
   .view-options {
