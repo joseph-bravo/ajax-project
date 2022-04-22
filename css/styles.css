@@ -294,7 +294,7 @@ button[data-option="👍"].active {
 
 .collapse-button {
   padding: 0.5rem;
-  width: clamp(0px, 80%, 550px);
+  width: clamp(0px, 90%, 550px);
 }
 
 /** Archetype Header */
