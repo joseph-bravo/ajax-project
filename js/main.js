@@ -6,6 +6,7 @@
 /* global allArchetypes */
 /* global Card */
 /* global getArchetype */
+/* global rawData */
 /* global domUtils */
 /* global _ */
 
@@ -68,36 +69,6 @@ for (var i = 0; i < $navLinks.length; i++) {
     swapView(event.target.dataset.nav);
   });
 }
-
-//! =========================================================================
-var $resultsView = document.querySelector('main [data-view="results"]');
-var $selectAllButton = document.querySelector('button.select-all-button');
-
-var toDelete = [];
-
-function toggleEditing(bool) {
-  if (bool) {
-    $selectAllButton.classList.remove('hidden');
-  } else {
-    $selectAllButton.classList.add('hidden');
-    toDelete = [];
-  }
-}
-
-var $confirmDeleteButton = document.querySelector('#delete-confirm');
-var $deleteConfirmationModal = document.querySelector('.delete-confirmation');
-$confirmDeleteButton.addEventListener('click', function () {
-  $deleteConfirmationModal.showModal();
-});
-
-var $modalContainer = document.querySelector('.modal-container');
-$deleteConfirmationModal.addEventListener('click', function (event) {
-  if (!event.path.includes($modalContainer)) {
-    $deleteConfirmationModal.close();
-  }
-});
-
-//! =========================================================================
 
 // ? Change loading state
 function setLoading(bool) {
@@ -241,8 +212,6 @@ function rateCard(event) {
     userData.ratings.unshift(rating);
     userCards.unshift(newCard);
 
-    getArchetype(newCard.archetype).archetypeUserCards.push(newCard);
-
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
 
@@ -284,6 +253,14 @@ window.addEventListener('keydown', function (event) {
 
 // ? Sorting Results View
 
+function updateArchetypes() {
+  allArchetypes.forEach(function (element) {
+    element.archetypeUserCards = userCards.filter(function (card) {
+      return card.archetype === element.name;
+    });
+  });
+}
+
 var options = {
   viewRatings: 'all',
   viewArchetype: true,
@@ -295,9 +272,11 @@ var options = {
 };
 
 function rearrangeResults() {
+  updateArchetypes();
   domUtils.removeAllChildren($resultsList);
   domUtils.removeAllChildren($allCardsList);
   $resultsList.dataset.viewArchetype = options.viewArchetype;
+
   if (options.viewArchetype) {
     $collapseButton.classList.remove('hidden');
     allArchetypes.forEach(function (element) {
@@ -511,6 +490,111 @@ $collapseButton.addEventListener('click', function () {
 });
 
 //! ------------------
+
+// ? Deletion Handling
+//! =========================================================================
+var $resultsView = document.querySelector('main [data-view="results"]');
+var $selectAllButton = document.querySelector('button.select-all-button');
+
+var toDelete = [];
+var isEditing = false;
+
+var $confirmDeleteButton = document.querySelector('#delete-confirm');
+var $deleteConfirmationModal = document.querySelector('.delete-confirmation');
+var $deleteModalCount = document.querySelector('.delete-count');
+
+$confirmDeleteButton.addEventListener('click', function () {
+  $deleteModalCount.textContent = toDelete.length;
+  $deleteConfirmationModal.showModal();
+});
+
+function toggleEditing(bool) {
+  if (bool) {
+    isEditing = true;
+    $selectAllButton.classList.remove('hidden');
+    $resultsList.classList.add('editing');
+    userCards.forEach(function (element) {
+      var $anchor = element.dom.querySelector('a');
+      $anchor.style['pointer-events'] = 'none';
+    });
+    updateSelectedText();
+  } else {
+    isEditing = false;
+    $selectAllButton.classList.add('hidden');
+    $resultsList.classList.remove('editing');
+    toDelete = [];
+    userCards.forEach(function (element) {
+      var $anchor = element.dom.querySelector('a');
+      $anchor.style['pointer-events'] = 'auto';
+      element.dom.classList.remove('selected');
+    });
+  }
+}
+
+var $selectedCount = document.querySelector('#selected-count');
+var $selectedCountText = document.querySelector('.selected-text');
+function updateSelectedText() {
+  if (toDelete.length > 0) {
+    $selectedCountText.classList.remove('hidden');
+    $selectedCount.textContent = toDelete.length;
+  } else {
+    $selectedCountText.classList.add('hidden');
+  }
+}
+
+$resultsList.addEventListener('click', function (event) {
+  if (isEditing) {
+    if (event.target.matches('.card, .card *')) {
+      var $card = event.target.closest('[data-card-id]');
+      var cardID = JSON.parse($card.dataset.cardId);
+      var cardToSelect = userCards.find(function (element) { return element.id === cardID; });
+      if (!toDelete.includes(cardToSelect)) {
+        $card.classList.add('selected');
+        toDelete.push(cardToSelect);
+      } else {
+        $card.classList.remove('selected');
+        toDelete.splice(toDelete.indexOf(cardToSelect), 1);
+      }
+      updateSelectedText();
+    }
+  }
+});
+
+$selectAllButton.addEventListener('click', function () {
+  userCards.forEach(function (element) {
+    if (!toDelete.includes(element)) {
+      element.dom.classList.add('selected');
+      toDelete.push(element);
+    }
+  });
+  updateSelectedText();
+});
+
+var $modalContainer = document.querySelector('.modal-container');
+$deleteConfirmationModal.addEventListener('click', function (event) {
+  if (!event.path.includes($modalContainer)) {
+    $deleteConfirmationModal.close();
+    return;
+  }
+  if (event.target.matches('button.yes')) {
+    toDelete.forEach(function (element) {
+      deleteUserCard(element);
+    });
+    toDelete = [];
+    swapView('results');
+  } else if (event.target.matches('button.no')) {
+    $deleteConfirmationModal.close();
+  }
+});
+
+function deleteUserCard(card) {
+  var indexOfCardToDelete = userCards.indexOf(userCards.find(function (element) { return element === card; }));
+  var cardToReplace = rawData.find(function (element) { return element.id === card.id; });
+  userCards.splice(indexOfCardToDelete, 1);
+  remainingCards.unshift(cardToReplace);
+  updateArchetypes();
+}
+//! =========================================================================
 
 // ? Site Initialization
 

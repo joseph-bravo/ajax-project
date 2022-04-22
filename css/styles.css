@@ -97,6 +97,16 @@ h3 * {
   font-stretch: semi-condensed;
 }
 
+.selected-text {
+  padding-left: 1rem;
+}
+
+.selected-text,
+.selected-text > * {
+  font-weight: normal;
+  font-size: 1.25rem;
+}
+
 /** buttons */
 
 button {
@@ -294,6 +304,12 @@ li.card-disliked a {
   background-color: var(--dislike-color);
 }
 
+li.card.selected {
+  filter: brightness(1.2);
+  outline: 5px solid white;
+  border-radius: 5px;
+}
+
 /** View Options */
 
 .results-options {
@@ -320,6 +336,10 @@ button[data-option="👍"].active {
 
 [data-view-archetype="true"].results-list .all-cards {
   display: none;
+}
+
+.results-list.editing .card {
+  cursor: pointer;
 }
 
 /** Archetype Header */
