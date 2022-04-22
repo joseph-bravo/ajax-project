@@ -98,13 +98,14 @@ h3 * {
 }
 
 .selected-text {
-  padding-left: 1rem;
+  padding-left: 0.5rem;
 }
 
 .selected-text,
 .selected-text > * {
   font-weight: normal;
   font-size: 1.25rem;
+  font-stretch: condensed;
 }
 
 /** buttons */

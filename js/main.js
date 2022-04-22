@@ -61,6 +61,8 @@ function swapView(switchToView) {
     toggleEditing(false);
   }
 
+  updateRemainingCardsText();
+
   currentView = switchToView;
 }
 
@@ -127,10 +129,13 @@ function displayCard(card, animation) {
     $mainCardTitle.textContent = card.name;
     $mainCardLink.href = 'https://db.ygoprodeck.com/card/?search=' + card.id;
 
-    $remainingCards.textContent = remainingCards.length;
+    updateRemainingCardsText();
   });
 }
 
+function updateRemainingCardsText() {
+  $remainingCards.textContent = remainingCards.length;
+}
 // ? Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
@@ -536,9 +541,11 @@ var $selectedCountText = document.querySelector('.selected-text');
 function updateSelectedText() {
   if (toDelete.length > 0) {
     $selectedCountText.classList.remove('hidden');
+    $confirmDeleteButton.classList.remove('hidden');
     $selectedCount.textContent = toDelete.length;
   } else {
     $selectedCountText.classList.add('hidden');
+    $confirmDeleteButton.classList.add('hidden');
   }
 }
 
@@ -582,6 +589,8 @@ $deleteConfirmationModal.addEventListener('click', function (event) {
     });
     toDelete = [];
     swapView('results');
+    $deleteConfirmationModal.close();
+
   } else if (event.target.matches('button.no')) {
     $deleteConfirmationModal.close();
   }
