@@ -78,6 +78,10 @@
 
 /** Positioning */
 
+.pad-top-smaller {
+  padding-top: 0.5rem;
+}
+
 .pad-top-sm {
   padding-top: 1.5rem;
 }

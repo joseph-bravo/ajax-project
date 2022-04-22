@@ -28,6 +28,24 @@
 </head>
 <body>
 
+  <dialog class="delete-confirmation drop-shadow text-align-center">
+    <div class="modal-container">
+      <div class="row justify-center">
+        <div class="column-full">
+          <h3>Are you sure you want to delete <span class="delete-count">0</span> ratings?</h3>
+        </div>
+      </div>
+      <div class="row justify-center pad-top-smaller">
+        <div class="column-half">
+          <button class="no drop-shadow">No</button>
+        </div>
+        <div class="column-half">
+          <button class="yes drop-shadow">Yes</button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <header class="drop-shadow">
     <div class="container full-height">
       <div class="row full-height align-center " data-view="rating">
@@ -46,7 +64,21 @@
           <h1 class="logo text-align-center">Results</h1>
         </div>
         <div class="flex-grow-1">
-          <a></a>
+          <a data-nav="editing" class="text-align-right">Editing</a>
+        </div>
+      </div>
+      <div class="row full-height align-center hidden" data-view="editing">
+        <div class="flex-grow-1">
+          <a data-nav="results" class="text-align-left">Back</a>
+        </div>
+        <div class="flex-grow-2">
+          <div class="row justify-center align-center">
+            <h1 class="logo text-align-center">Editing</h1>
+            <p class="selected-text text-align-center hidden">(Selected: <span id="selected-count"></span>)</p>
+          </div>
+        </div>
+        <div class="flex-grow-1">
+          <button class="text-align-right" id="delete-confirm">Confirm</button>
         </div>
       </div>
     </div>
@@ -153,7 +185,8 @@
         </div>
       </div>
 
-      <div class="row justify-center pad-top-sm">
+      <div class="row extra-buttons flex-column align-center pad-top-sm gap-y-sm">
+        <button class="select-all-button hidden">Select All</button>
         <button class="collapse-button">
           Uncollapse All
         </button>
