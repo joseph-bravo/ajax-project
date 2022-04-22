@@ -398,7 +398,7 @@ function resultsOrder(direction) {
 // ? Header Button Handler
 
 function headerButtonHandler(event) {
-  if (event.target.matches('button.archetype-header, button.archetype-header i')) {
+  if (event.target.matches('button.archetype-header, button.archetype-header *')) {
     var $archetypeToToggle = event.target.closest('[data-archetype-id]');
 
     if ($archetypeToToggle.dataset.expanded === 'true') {
