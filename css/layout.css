@@ -95,6 +95,10 @@
   padding-top: 3rem;
 }
 
+.pad-bottom-med {
+  padding-bottom: 1.5rem;
+}
+
 .pad-y-sm {
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
