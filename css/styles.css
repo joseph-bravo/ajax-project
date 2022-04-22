@@ -65,6 +65,8 @@ main {
 
 .label-block,
 button {
+  font-size: 1.25rem;
+  text-align: center;
   background: var(--label-color);
   border-radius: 5px;
   width: 100%;
@@ -91,6 +93,7 @@ h2 {
 
 h3,
 h3 * {
+  font-size: 1.5rem;
   font-stretch: semi-condensed;
 }
 
@@ -106,7 +109,7 @@ header a:active {
   color: var(--button-color);
 }
 
-main button {
+button {
   color: var(--logo-txt-color);
   background: var(--button-color);
   font-weight: bold;
@@ -122,7 +125,7 @@ main button {
   padding-bottom: 1.25rem;
 }
 
-button.view-button {
+.results-options button {
   font-size: 1.25rem;
   font-weight: normal;
   padding: 0.25rem 0.5rem;
@@ -138,8 +141,8 @@ button.active {
   cursor: default;
 }
 
-main button:enabled:active,
-main button.active {
+button:enabled:active,
+button.active {
   color: var(--button-color);
   background: var(--button-clicked-color);
   box-shadow: var(--shadow) inset;
@@ -162,7 +165,8 @@ main button.active {
   font-size: 3.5rem;
 }
 
-.rating-buttons button:enabled:active i {
+.rating-buttons button:enabled:active i,
+.archetype-header:active {
   filter: brightness(50%);
 }
 
@@ -189,20 +193,26 @@ main button.active {
 }
 
 /** results styling */
-ul.results-list {
+ul {
   overflow-y: auto;
-  all: unset;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 1rem;
   width: 100%;
+}
+
+ul.card-list {
   padding: 1.5rem 0;
 }
 
+li {
+  width: 100%;
+}
+
 li.card {
-  all: unset;
-  width: 90%;
+  width: clamp(90%, 90%, 650px);
+  margin: auto 0;
 }
 
 li.card a {
@@ -256,30 +266,102 @@ li.card-disliked a {
 
 /** View Options */
 
-.view-options {
-  margin: 0 auto;
-  padding-left: 10%;
-  padding-right: 10%;
-  max-width: 600px;
+.results-options {
   font-size: 1.25rem;
 }
 
-.view-options-buttons {
-  max-width: 100%;
-}
-
-main button[data-option="👎"]:active,
+button[data-option="👎"]:active,
 button[data-option="👎"].active {
   background-color: var(--dislike-color);
 }
 
-main button[data-option="👍"]:active,
+button[data-option="👍"]:active,
 button[data-option="👍"].active {
   background-color: var(--like-color);
 }
 
+.results-list {
+  margin-top: 2rem;
+}
+
+[data-view-archetype="false"].results-list .archetype {
+  display: none;
+}
+
+[data-view-archetype="true"].results-list .all-cards {
+  display: none;
+}
+
+.collapse-button {
+  padding: 0.5rem;
+  width: clamp(0px, 90%, 550px);
+}
+
+/** Archetype Header */
+button.archetype-header,
+.all-cards-header {
+  text-align: center;
+  background: var(--label-color);
+  border-radius: 5px;
+  color: black;
+  font-stretch: semi-condensed;
+  font-size: 1.5rem;
+  padding: 0;
+  width: 90%;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: var(--shadow);
+}
+
+button.archetype-header:active {
+  color: black;
+}
+
+button.archetype-header i.archetype-header-control {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-050%);
+  font-size: 1.75rem;
+  right: 0.75rem;
+}
+
+li[data-expanded="false"].archetype ul.card-list {
+  display: none;
+}
+
+li[data-empty="true"].archetype {
+  display: none;
+}
+
+.card-count::before {
+  content: " (";
+}
+
+.card-count::after {
+  content: ")";
+}
+
+/** media queries */
 @media only screen and (min-width: 800px) {
   li.card {
     flex-basis: 40%;
+  }
+
+  button.archetype-header,
+  .all-cards-header,
+  .collapse-button {
+    width: 60%;
+  }
+
+  .view-options {
+    order: 2;
+  }
+
+  .archetype-options {
+    order: 1;
+  }
+
+  .order-options {
+    order: 3;
   }
 }

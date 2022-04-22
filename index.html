@@ -96,35 +96,107 @@
     </div>
 
     <div class="container hidden" data-view="results">
-      <div class="row flex-wrap view-options text-align-center justify-center pad-top-sm gap-y-sm">
-        <div class="column-full label-block drop-shadow">
-          <h3>View Ratings</h3>
+      <div class="row flex-wrap results-options justify-center pad-top-sm gap-y-sm gap-x-sm">
+        <div class="column-break-half view-options"> <!-- View Options -->
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>View Ratings</h3>
+            </div>
+            <div class="column-full">
+              <div class="row view-options-buttons justify-space-between gap-x-smaller">
+                <button data-option="👎" class="view-button flex-grow-1">
+                  Disliked
+                </button>
+                <button data-option="all" class="view-button flex-grow-1">
+                  All
+                </button>
+                <button data-option="👍" class="view-button flex-grow-1">
+                  Liked
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="column-full">
-          <div class="row view-options-buttons justify-space-between gap-x-smaller">
-            <button data-option="👎" class="view-button flex-grow-1">
-              Disliked
-            </button>
-            <button data-option="all" class="view-button flex-grow-1">
-              All
-            </button>
-            <button data-option="👍" class="view-button flex-grow-1">
-              Liked
-            </button>
+        <div class="column-break-half-half archetype-options">
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>View Archetype</h3>
+            </div>
+            <div class="column-full">
+              <div class="row justify-space-between gap-x-smaller">
+                <button data-option="false" class="archetype-button flex-grow-1">
+                  Hide
+                </button>
+                <button data-option="true" class="archetype-button flex-grow-1">
+                  Show
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="column-break-half-half order-options">
+          <div class="row flex-wrap text-align-center gap-y-sm">
+            <div class="column-full label-block drop-shadow">
+              <h3>Sort Order</h3>
+            </div>
+            <div class="column-full">
+              <div class="row justify-space-between gap-x-smaller">
+                <button data-option="recent" class="order-button flex-grow-1">
+                  Recent
+                </button>
+                <button data-option="oldest" class="order-button flex-grow-1">
+                  Oldest
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <ul class="results-list">
-        <li class="card card-liked" data-card-id="0841308">
-          <img class="race" src="images/iconsMD/cyberse.png" alt="">
-          <div class="card-text">
-            <h3>Card Name</h3>
-            <h4>Card Data</h4>
+
+      <div class="row justify-center pad-top-sm">
+        <button class="collapse-button">
+          Uncollapse All
+        </button>
+      </div>
+
+      <ul data-view-archetype="true" class="results-list">
+        <li class="all-cards">
+          <div class="all-cards-header label-block drop-shadow">
+            <h3>All Cards<span class="card-count">(0)</span></h3>
           </div>
+          <ul class="card-list">
+            <li class="card card-liked" data-card-id="">
+              <a href="">
+                <img class="race" src="images/iconsMD/cyberse.png" alt="">
+                <div class="card-text">
+                  <h3>Card Name</h3>
+                  <h4>Card Data</h4>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li data-archetype-id="0" class="archetype">
+          <button class="archetype-header">
+            Archetype Name
+            <i class="archetype-header-control fas fa-minus-square"></i>
+          </button>
+          <ul class="card-list">
+            <li class="card card-liked" data-card-id="" >
+              <a href="">
+                <img class="race" src="images/iconsMD/cyberse.png" alt="">
+                <div class="card-text">
+                  <h3>Card Name</h3>
+                  <h4>Card Data</h4>
+                </div>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </div>
 
   </main>
+
 </body>
 </html>

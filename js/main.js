@@ -3,6 +3,9 @@
 /* global remainingCards */
 /* global userCards */
 /* global userCardSort */
+/* global allArchetypes */
+/* global Card */
+/* global getArchetype */
 /* global domUtils */
 /* global _ */
 
@@ -23,21 +26,23 @@ var $likeButton = document.querySelector('.like-button');
 var $dislikeButton = document.querySelector('.dislike-button');
 
 var $resultsList = document.querySelector('ul.results-list');
+var $allCardsList = document.querySelector('li.all-cards .card-list');
+var $allCardsContainer = document.querySelector('li.all-cards');
 
 var $views = document.querySelectorAll('[data-view]');
 var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
-var viewRatingOption = 'all';
 
-//* View Swapping
+// ? View Swapping
 function swapView(switchToView) {
   if (currentView === switchToView) {
     return;
   }
 
   if (switchToView === 'results') {
-    resultsShowOnly(viewRatingOption);
+    redrawButtons();
+    rearrangeResults();
   }
 
   for (var i = 0; i < $views.length; i++) {
@@ -56,7 +61,7 @@ for (var i = 0; i < $navLinks.length; i++) {
   });
 }
 
-//* Change loading state
+// ? Change loading state
 function setLoading(bool) {
   if (bool) {
     currentlyLoading = true;
@@ -77,7 +82,7 @@ function setLoading(bool) {
   }
 }
 
-//* Change displayed card
+// ? Change displayed card
 function displayCard(card, animation) {
   setLoading(true);
   setAnimation($imageContainer, animation);
@@ -90,10 +95,20 @@ function displayCard(card, animation) {
   }
 
   var croppedImageUrl =
-  'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
-  card.id + '.jpg';
+    'https://storage.googleapis.com/ygoprodeck.com/pics_artgame/' +
+    card.id +
+    '.jpg';
 
   $mainCardImage.src = croppedImageUrl;
+
+  $mainCardImage.addEventListener('error', function () {
+    var fallback = card.card_images[0].image_url;
+    if (!fallback) {
+      $mainCardImage.src = 'images/placeholder.png';
+      return;
+    }
+    $mainCardImage.src = card.card_images[0].image_url;
+  });
 
   $mainCardImage.addEventListener('load', function () {
     setLoading(false);
@@ -107,7 +122,7 @@ function displayCard(card, animation) {
   });
 }
 
-//* Animation Handlers
+// ? Animation Handlers
 var motions = {
   discardCard: 'animate__zoomOut',
   likeCard: 'animate__backOutRight',
@@ -141,7 +156,6 @@ function setAnimation(target, animation) {
       $mainCardDisplay.classList.remove('liked', 'disliked');
       animationToSet = motions.displayCard;
       break;
-
   }
   target.classList.add(animationToSet);
 }
@@ -156,7 +170,7 @@ function animationEndHandler(event) {
 }
 $imageContainer.addEventListener('animationend', animationEndHandler);
 
-//* New Card button.
+// ? New Card button.
 function drawNewCard(action) {
   currentCard = _.sample(remainingCards);
   displayCard(currentCard, action);
@@ -169,7 +183,7 @@ $newCardButton.addEventListener('click', function () {
   drawNewCard('discard');
 });
 
-//* Like/Dislike buttons
+// ? Like/Dislike buttons
 var $ratingButtons = document.querySelector('.rating-buttons');
 function rateCard(event) {
   if (currentlyLoading) {
@@ -185,10 +199,11 @@ function rateCard(event) {
       rating = new Rating(currentCard.id, '👎');
       currentCard.rating = '👎';
     }
-    currentCard.timeRated = Date.now();
+    var newCard = new Card(currentCard, rating.rating, Date.now);
     userData.ratings.unshift(rating);
-    userCards.unshift(currentCard);
-    prependToResultsView(currentCard);
+    userCards.unshift(newCard);
+
+    getArchetype(newCard.archetype).archetypeUserCards.push(newCard);
 
     var indexOfRatedCard = remainingCards.indexOf(currentCard);
     remainingCards.splice(indexOfRatedCard, 1);
@@ -198,7 +213,8 @@ function rateCard(event) {
 }
 $ratingButtons.addEventListener('click', rateCard);
 
-//* Bind keyboard to buttons
+// ? Bind keyboard to buttons
+
 window.addEventListener('keydown', function (event) {
   switch (event.key) {
     case ' ':
@@ -228,91 +244,143 @@ window.addEventListener('keydown', function (event) {
   }
 });
 
-//* Results card <li> DOM Creation
-function getIconFromCardObj(cardObj) {
-  var kebabed = _.kebabCase(cardObj.race);
-  return 'images/iconsMD/' + kebabed + '.png';
-}
+// ? Sorting Results View
 
-function createCardEntryDOM(ratedCardObj) {
-  /*
-    * <li class="card card-liked" data-card-id="0841308">
-    *   <img class="race" src="images/iconsMD/cyberse.png" alt="race icon">
-    *   <div class="card-text">
-    *     <h3>Card Name</h3>
-    *     <h4>Card Data</h4>
-    *   </div>
-    * </li>
-  */
+var options = {
+  viewRatings: 'all',
+  viewArchetype: true,
+  sortOrder: 'recent',
+  set: function (option, value) {
+    this[option] = value;
+    rearrangeResults();
+  }
+};
 
-  var cardColor;
+function rearrangeResults() {
+  domUtils.removeAllChildren($resultsList);
+  domUtils.removeAllChildren($allCardsList);
+  $resultsList.dataset.viewArchetype = options.viewArchetype;
+  if (options.viewArchetype) {
+    $collapseButton.classList.remove('hidden');
+    allArchetypes.forEach(function (element) {
+      var count = 0;
+      var $count = element.dom.querySelector('.card-count');
+      element.domCardList.textContent = '';
+      element.dom.dataset.empty = element.isEmpty();
+      if (element.isEmpty()) {
+        return;
+      }
+      if (options.viewRatings === 'all') {
+        element.archetypeUserCards.forEach(function (card) {
+          element.domCardList.prepend(card.dom);
+          count++;
+        });
+      } else {
+        var stillEmpty = true;
+        element.archetypeUserCards.forEach(function (card) {
+          if (card.rating === options.viewRatings) {
+            element.domCardList.prepend(card.dom);
+            stillEmpty = false;
+            count++;
+          }
+        });
+      }
+      if (stillEmpty) {
+        return;
+      }
+      $count.textContent = count;
+      $resultsList.append(element.dom);
+    });
 
-  if (ratedCardObj.rating === '👍') {
-    cardColor = 'card-liked';
   } else {
-    cardColor = 'card-disliked';
-  }
-
-  var $li = domUtils.createElement('li', {
-    class: 'card ' + cardColor,
-    'data-card-id': ratedCardObj.id
-  });
-
-  var $a = domUtils.createElement('a', {
-    href: 'https://db.ygoprodeck.com/card/?search=' + ratedCardObj.id,
-    target: '_blank'
-  });
-
-  var $img = domUtils.createElement('img', {
-    class: 'race',
-    src: getIconFromCardObj(ratedCardObj),
-    alt: ratedCardObj.race + ' icon'
-  });
-
-  var $cardText = domUtils.createElement('div', {
-    class: 'card-text'
-  });
-
-  var $h3 = domUtils.createElement('h3', {}, ratedCardObj.name);
-
-  var archetype = '';
-  if (ratedCardObj.race) {
-    archetype = ' (' + ratedCardObj.race + ')';
-  }
-
-  var h4TextContent = '[' + ratedCardObj.race + ' / ' + ratedCardObj.type + ']' + archetype;
-
-  var $h4 = domUtils.createElement('h4', {}, h4TextContent);
-
-  $cardText.append($h3, $h4);
-  $a.append($img, $cardText);
-  $li.append($a);
-
-  ratedCardObj.domElement = $li;
-  return $li;
-}
-
-function prependToResultsView(card) {
-  $resultsList.prepend(createCardEntryDOM(card));
-}
-
-function redrawResultsView() {
-  while ($resultsList.children.length > 0) {
-    $resultsList.children[0].remove();
-  }
-  userCards.forEach(function (element) {
-    prependToResultsView(element);
-  });
-}
-
-//* Sorting Results View
-function resultsShowOnly(filter) {
-  var toShow = userCardSort.filter(filter);
-  userCards.forEach(function (element) {
-    if (toShow.includes(element)) {
-      element.domElement.classList.remove('hidden');
+    $collapseButton.classList.add('hidden');
+    var count = 0;
+    var $count = $allCardsContainer.querySelector('.card-count');
+    if (options.viewRatings === 'all') {
+      userCards.forEach(function (card) {
+        $allCardsList.prepend(card.dom);
+        count++;
+      });
     } else {
-      element.domElement.classList.add('hidden');
+      userCards.forEach(function (card) {
+        if (card.rating === options.viewRatings) {
+          $allCardsList.prepend(card.dom);
+          count++;
+        }
+      });
+    }
+    $count.textContent = count;
+    $resultsList.append($allCardsContainer);
+  }
+  if (options.sortOrder === 'recent') {
+    resultsOrder('reverse');
+  } else {
+    resultsOrder();
+  }
+  toggleAllArchetypes(false);
+}
+
+function resultsOptionsHandler(event) {
+  if (event.target.matches('button')) {
+    switch (event.target.dataset.option) {
+      //* View Ratings
+      case '👎':
+        options.set('viewRatings', '👎');
+        break;
+      case 'all':
+        options.set('viewRatings', 'all');
+        break;
+      case '👍':
+        options.set('viewRatings', '👍');
+        break;
+
+        //* View Archetype
+      case 'false':
+        options.set('viewArchetype', false);
+        break;
+      case 'true':
+        options.set('viewArchetype', true);
+        break;
+
+      //* Sort Order
+      case 'recent':
+        options.set('sortOrder', 'recent');
+        break;
+      case 'oldest':
+        options.set('sortOrder', 'oldest');
+        break;
+    }
+    redrawButtons();
+  }
+}
+
+var $resultsOptions = document.querySelector('.results-options');
+$resultsOptions.addEventListener('click', resultsOptionsHandler);
+
+var $viewButtons = document.querySelectorAll('.view-button');
+var $archetypeButtons = document.querySelectorAll('.archetype-button');
+var $orderButtons = document.querySelectorAll('.order-button');
+
+function redrawButtons() {
+  $viewButtons.forEach(function (element) {
+    if (element.dataset.option === options.viewRatings) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  $archetypeButtons.forEach(function (element) {
+    if (element.dataset.option === JSON.stringify(options.viewArchetype)) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
+    }
+  });
+  $orderButtons.forEach(function (element) {
+    if (element.dataset.option === options.sortOrder) {
+      element.classList.add('active');
+    } else {
+      element.classList.remove('active');
     }
   });
 }
@@ -323,43 +391,100 @@ function resultsOrder(direction) {
     sortOrder.reverse();
   }
   sortOrder.forEach(function (element, index) {
-    element.domElement.style.order = index;
+    element.dom.style.order = index;
   });
 }
 
-var $viewRatingButtons = document.querySelectorAll('.view-button');
+// ? Header Button Handler
 
-function viewRatingButtonHandler(event) {
-  viewRatingOption = event.target.dataset.option;
-  $viewRatingButtons.forEach(function (element) {
-    if (element.dataset.option === viewRatingOption) {
-      element.classList.add('active');
+function headerButtonHandler(event) {
+  if (event.target.matches('button.archetype-header, button.archetype-header *')) {
+    var $archetypeToToggle = event.target.closest('[data-archetype-id]');
+
+    if ($archetypeToToggle.dataset.expanded === 'true') {
+      toggleHeader($archetypeToToggle, false);
     } else {
-      element.classList.remove('active');
+      toggleHeader($archetypeToToggle, true);
     }
-  });
-  resultsShowOnly(viewRatingOption);
+
+  }
 }
 
-$viewRatingButtons.forEach(function (element) {
-  element.addEventListener('click', viewRatingButtonHandler);
+$resultsList.addEventListener('click', headerButtonHandler);
+
+function toggleHeader(target, bool) {
+  var $icon = target.querySelector('i');
+  if (bool) {
+    $icon.classList.remove('fa-plus-square');
+    $icon.classList.add('fa-minus-square');
+    target.dataset.expanded = true;
+    getArchetype(target.dataset.archetypeId).expanded = true;
+  } else {
+    $icon.classList.remove('fa-minus-square');
+    $icon.classList.add('fa-plus-square');
+    target.dataset.expanded = false;
+    getArchetype(target.dataset.archetypeId).expanded = false;
+  }
+  updateCollapseButtonText();
+}
+
+// ? Collapse All button handler
+
+//! ------------------
+
+var $collapseButton = document.querySelector('.collapse-button');
+
+function getAllVisibleArchetypes() {
+  return document.querySelectorAll('.archetype');
+}
+
+function areAnyExpanded() {
+  var allVisible = getAllVisibleArchetypes();
+  for (var i = 0; i < allVisible.length; i++) {
+    if (allVisible[i].dataset.expanded === 'true') {
+      return true;
+    }
+  }
+  return false;
+}
+
+function toggleAllArchetypes(bool) {
+  getAllVisibleArchetypes().forEach(function (element) {
+    toggleHeader(element, bool);
+  });
+  updateCollapseButtonText();
+
+}
+
+function updateCollapseButtonText() {
+  if (areAnyExpanded()) {
+    $collapseButton.textContent = 'Collapse All';
+  } else {
+    $collapseButton.textContent = 'Uncollapse All';
+  }
+}
+
+$collapseButton.addEventListener('click', function () {
+  if (areAnyExpanded()) {
+    toggleAllArchetypes(false);
+  } else {
+    toggleAllArchetypes(true);
+  }
 });
 
-var $viewAllButton = document.querySelector('[data-option="all"]');
+//! ------------------
 
-//! Site Initialization
+// ? Site Initialization
 
 swapView(currentView);
 
-// * initializeSite() runs after data loads in.
-
+// ? initializeSite() runs after data loads in.
 /* exported initializeSite */
 function initializeSite() {
   $main.classList.remove('hidden');
   setLoading(true);
-  redrawResultsView();
+  rearrangeResults();
   resultsOrder('reverse');
-  $viewAllButton.click();
   swapView('rating');
   drawNewCard();
 }
