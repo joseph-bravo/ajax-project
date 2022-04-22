@@ -1,8 +1,33 @@
-* {
+body {
   font-family: Saira, sans-serif;
 }
 
 h1 {
   font-family: "Reem Kufi", sans-serif;
-  font-weight: bold;
+}
+
+h3,
+h3 * {
+  font-size: 1.5rem;
+  font-stretch: semi-condensed;
+}
+
+button {
+  font-family: inherit;
+}
+
+h2,
+h3,
+h4 {
+  font-weight: 400;
+}
+
+h1,
+button,
+.label-block * {
+  font-weight: 600;
+}
+
+h2 {
+  font-stretch: 66%;
 }

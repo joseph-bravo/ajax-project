@@ -13,6 +13,11 @@
   margin: 0 auto;
 }
 
+.header-container {
+  width: clamp(0px, 90%, 600px);
+  margin: 0 auto;
+}
+
 .row {
   display: flex;
 }
