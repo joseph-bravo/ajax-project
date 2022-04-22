@@ -29,17 +29,19 @@
 <body>
 
   <dialog class="delete-confirmation drop-shadow text-align-center">
-    <div class="row justify-center">
-      <div class="column-full">
-        <h3>Are you sure you want to delete <span class="delete-count">0</span> ratings?</h3>
+    <div class="modal-container">
+      <div class="row justify-center">
+        <div class="column-full">
+          <h3>Are you sure you want to delete <span class="delete-count">0</span> ratings?</h3>
+        </div>
       </div>
-    </div>
-    <div class="row justify-center pad-top-smaller">
-      <div class="column-half">
-        <button class="no">No</button>
-      </div>
-      <div class="column-half">
-        <button class="yes">Yes</button>
+      <div class="row justify-center pad-top-smaller">
+        <div class="column-half">
+          <button class="no drop-shadow">No</button>
+        </div>
+        <div class="column-half">
+          <button class="yes drop-shadow">Yes</button>
+        </div>
       </div>
     </div>
   </dialog>
@@ -62,18 +64,18 @@
           <h1 class="logo text-align-center">Results</h1>
         </div>
         <div class="flex-grow-1">
-          <a></a>
+          <a data-nav="editing" class="text-align-right">Editing</a>
         </div>
       </div>
       <div class="row full-height align-center hidden" data-view="editing">
         <div class="flex-grow-1">
-          <a data-nav="rating" class="text-align-left">Back</a>
+          <a data-nav="results" class="text-align-left">Back</a>
         </div>
         <div class="flex-grow-2">
           <h1 class="logo text-align-center">Editing</h1>
         </div>
         <div class="flex-grow-1">
-          <a>Confirm</a>
+          <button class="text-align-right" id="delete-confirm">Confirm</button>
         </div>
       </div>
     </div>
@@ -180,7 +182,8 @@
         </div>
       </div>
 
-      <div class="row justify-center pad-top-sm">
+      <div class="row extra-buttons flex-column align-center pad-top-sm gap-y-sm">
+        <button class="select-all-button hidden">Select All</button>
         <button class="collapse-button">
           Uncollapse All
         </button>

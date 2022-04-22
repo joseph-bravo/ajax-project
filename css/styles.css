@@ -99,16 +99,6 @@ h3 * {
 
 /** buttons */
 
-header a {
-  background: 0;
-  font-size: 1.25rem;
-  color: var(--logo-txt-color);
-}
-
-header a:active {
-  color: var(--button-color);
-}
-
 button {
   color: var(--logo-txt-color);
   background: var(--button-color);
@@ -133,6 +123,15 @@ dialog button.no {
   background: var(--dislike-color);
 }
 
+header a,
+header button {
+  font-weight: normal;
+  background: 0;
+  font-size: 1.25rem;
+  color: var(--logo-txt-color);
+  box-shadow: unset;
+}
+
 .rating-buttons button {
   border-radius: 50px;
   width: 150px;
@@ -146,6 +145,11 @@ dialog button.no {
   padding: 0.25rem 0.5rem;
 }
 
+.extra-buttons button {
+  padding: 0.5rem;
+  width: clamp(0px, 90%, 550px);
+}
+
 .loading > *,
 button:disabled {
   filter: brightness(0.75);
@@ -154,6 +158,10 @@ button:disabled {
 
 button.active {
   cursor: default;
+}
+
+header button:focus-visible {
+  outline: 0;
 }
 
 button:enabled:active,
@@ -183,6 +191,13 @@ button.active {
 .rating-buttons button:enabled:active i,
 .archetype-header:active {
   filter: brightness(50%);
+}
+
+header a:active,
+header button:enabled:active {
+  color: var(--button-color);
+  box-shadow: unset;
+  background: unset;
 }
 
 /** images */
@@ -307,11 +322,6 @@ button[data-option="👍"].active {
   display: none;
 }
 
-.collapse-button {
-  padding: 0.5rem;
-  width: clamp(0px, 90%, 550px);
-}
-
 /** Archetype Header */
 button.archetype-header,
 .all-cards-header {
@@ -360,10 +370,15 @@ li[data-empty="true"].archetype {
 
 dialog {
   margin: auto;
-  padding: 1.5rem 3rem;
   border: 0;
   background-color: var(--label-color);
   border-radius: 5px;
+  padding: 0;
+}
+
+dialog .modal-container {
+  width: 100%;
+  padding: 1.5rem 3rem;
 }
 
 dialog::backdrop {

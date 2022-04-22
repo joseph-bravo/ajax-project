@@ -52,6 +52,14 @@ function swapView(switchToView) {
       $views[i].classList.add('hidden');
     }
   }
+
+  if (switchToView === 'editing') {
+    $resultsView.classList.remove('hidden');
+    toggleEditing(true);
+  } else {
+    toggleEditing(false);
+  }
+
   currentView = switchToView;
 }
 
@@ -60,6 +68,36 @@ for (var i = 0; i < $navLinks.length; i++) {
     swapView(event.target.dataset.nav);
   });
 }
+
+//! =========================================================================
+var $resultsView = document.querySelector('main [data-view="results"]');
+var $selectAllButton = document.querySelector('button.select-all-button');
+
+var toDelete = [];
+
+function toggleEditing(bool) {
+  if (bool) {
+    $selectAllButton.classList.remove('hidden');
+  } else {
+    $selectAllButton.classList.add('hidden');
+    toDelete = [];
+  }
+}
+
+var $confirmDeleteButton = document.querySelector('#delete-confirm');
+var $deleteConfirmationModal = document.querySelector('.delete-confirmation');
+$confirmDeleteButton.addEventListener('click', function () {
+  $deleteConfirmationModal.showModal();
+});
+
+var $modalContainer = document.querySelector('.modal-container');
+$deleteConfirmationModal.addEventListener('click', function (event) {
+  if (!event.path.includes($modalContainer)) {
+    $deleteConfirmationModal.close();
+  }
+});
+
+//! =========================================================================
 
 // ? Change loading state
 function setLoading(bool) {
