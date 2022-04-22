@@ -268,7 +268,7 @@ function updateArchetypes() {
 
 var options = {
   viewRatings: 'all',
-  viewArchetype: true,
+  viewArchetype: false,
   sortOrder: 'recent',
   set: function (option, value) {
     this[option] = value;
