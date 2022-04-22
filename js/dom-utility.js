@@ -124,7 +124,7 @@ var domUtils = {
   },
   getIconFromCardObj: function (cardObj) {
     var kebabed = _.kebabCase(cardObj.race);
-    return 'images/iconsMD/' + kebabed + '.png';
+    return 'images/icons-md/' + kebabed + '.png';
   },
   removeAllChildren: function (DOMelement) {
     while (DOMelement.children.length > 0) {

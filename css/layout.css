@@ -13,6 +13,11 @@
   margin: 0 auto;
 }
 
+.header-container {
+  width: clamp(0px, 90%, 600px);
+  margin: 0 auto;
+}
+
 .row {
   display: flex;
 }
@@ -88,6 +93,10 @@
 
 .pad-top-med {
   padding-top: 3rem;
+}
+
+.pad-bottom-med {
+  padding-bottom: 1.5rem;
 }
 
 .pad-y-sm {
