@@ -28,6 +28,22 @@
 </head>
 <body>
 
+  <dialog class="delete-confirmation drop-shadow text-align-center">
+    <div class="row justify-center">
+      <div class="column-full">
+        <h3>Are you sure you want to delete <span class="delete-count">0</span> ratings?</h3>
+      </div>
+    </div>
+    <div class="row justify-center pad-top-smaller">
+      <div class="column-half">
+        <button class="no">No</button>
+      </div>
+      <div class="column-half">
+        <button class="yes">Yes</button>
+      </div>
+    </div>
+  </dialog>
+
   <header class="drop-shadow">
     <div class="container full-height">
       <div class="row full-height align-center " data-view="rating">
@@ -47,6 +63,17 @@
         </div>
         <div class="flex-grow-1">
           <a></a>
+        </div>
+      </div>
+      <div class="row full-height align-center hidden" data-view="editing">
+        <div class="flex-grow-1">
+          <a data-nav="rating" class="text-align-left">Back</a>
+        </div>
+        <div class="flex-grow-2">
+          <h1 class="logo text-align-center">Editing</h1>
+        </div>
+        <div class="flex-grow-1">
+          <a>Confirm</a>
         </div>
       </div>
     </div>

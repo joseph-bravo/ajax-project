@@ -118,6 +118,21 @@ button {
   box-shadow: var(--shadow);
 }
 
+dialog button {
+  margin: auto;
+  width: 80%;
+  padding: 0;
+  color: var(--button-color);
+}
+
+dialog button.yes {
+  background: var(--like-color);
+}
+
+dialog button.no {
+  background: var(--dislike-color);
+}
+
 .rating-buttons button {
   border-radius: 50px;
   width: 150px;
@@ -339,6 +354,20 @@ li[data-empty="true"].archetype {
 
 .card-count::after {
   content: ")";
+}
+
+/** Delete Modal */
+
+dialog {
+  margin: auto;
+  padding: 1.5rem 3rem;
+  border: 0;
+  background-color: var(--label-color);
+  border-radius: 5px;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.75);
 }
 
 /** media queries */
