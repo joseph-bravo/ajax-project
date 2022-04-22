@@ -261,7 +261,10 @@ function rearrangeResults() {
   domUtils.removeAllChildren($allCardsList);
   $resultsList.dataset.viewArchetype = options.viewArchetype;
   if (options.viewArchetype) {
+    $collapseButton.classList.remove('hidden');
     allArchetypes.forEach(function (element) {
+      var count = 0;
+      var $count = element.dom.querySelector('.card-count');
       element.domCardList.textContent = '';
       element.dom.dataset.empty = element.isEmpty();
       if (element.isEmpty()) {
@@ -270,6 +273,7 @@ function rearrangeResults() {
       if (options.viewRatings === 'all') {
         element.archetypeUserCards.forEach(function (card) {
           element.domCardList.prepend(card.dom);
+          count++;
         });
       } else {
         var stillEmpty = true;
@@ -277,26 +281,35 @@ function rearrangeResults() {
           if (card.rating === options.viewRatings) {
             element.domCardList.prepend(card.dom);
             stillEmpty = false;
+            count++;
           }
         });
       }
       if (stillEmpty) {
         return;
       }
+      $count.textContent = count;
       $resultsList.append(element.dom);
     });
+
   } else {
+    $collapseButton.classList.add('hidden');
+    var count = 0;
+    var $count = $allCardsContainer.querySelector('.card-count');
     if (options.viewRatings === 'all') {
       userCards.forEach(function (card) {
         $allCardsList.prepend(card.dom);
+        count++;
       });
     } else {
       userCards.forEach(function (card) {
         if (card.rating === options.viewRatings) {
           $allCardsList.prepend(card.dom);
+          count++;
         }
       });
     }
+    $count.textContent = count;
     $resultsList.append($allCardsContainer);
   }
   if (options.sortOrder === 'recent') {

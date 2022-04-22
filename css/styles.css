@@ -332,6 +332,14 @@ li[data-empty="true"].archetype {
   display: none;
 }
 
+.card-count::before {
+  content: " (";
+}
+
+.card-count::after {
+  content: ")";
+}
+
 /** media queries */
 @media only screen and (min-width: 800px) {
   li.card {

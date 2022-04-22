@@ -45,6 +45,13 @@ var domUtils = {
       },
       archetype.name
     );
+    var $count = this.createElement(
+      'span',
+      {
+        class: 'card-count'
+      },
+      '(0)'
+    );
     var $archetypeHeaderControl = this.createElement('i', {
       class: 'archetype-header-control fas fa-plus-square'
     });
@@ -53,7 +60,7 @@ var domUtils = {
     });
 
     $outerList.append($header, $cardList);
-    $header.append($archetypeHeaderControl);
+    $header.append($count, $archetypeHeaderControl);
     return $outerList;
   },
   createCardEntryDOM: function (ratedCardObj) {
