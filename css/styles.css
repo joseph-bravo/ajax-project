@@ -70,6 +70,10 @@ main {
   font-size: 1.5rem;
 }
 
+.image-loading-spinner {
+  min-height: 25rem;
+}
+
 .label-block,
 button {
   color: var(--label-txt-color);
@@ -342,7 +346,8 @@ button[data-option="👍"].active {
 /** Archetype Headers */
 
 button.archetype-header,
-.all-cards-header {
+.all-cards-header,
+button.nav-big-button {
   text-align: center;
   background: var(--label-color);
   border-radius: 5px;
@@ -353,6 +358,11 @@ button.archetype-header,
   margin: 0 auto;
   position: relative;
   box-shadow: var(--shadow);
+}
+
+button.nav-big-button {
+  background: var(--button-color);
+  max-width: clamp(18rem, 40%, 24rem);
 }
 
 button.archetype-header:active {
@@ -410,7 +420,8 @@ dialog::backdrop {
 
   button.archetype-header,
   .all-cards-header,
-  .collapse-button {
+  .collapse-button,
+  .nav-big-button {
     width: 60%;
   }
 

@@ -16,6 +16,7 @@
   integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
+  <link rel="stylesheet" href="css/loading-spinner.css">
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/layout.css">
   <link rel="stylesheet" href="css/fonts.css">
@@ -46,8 +47,21 @@
     </div>
   </dialog>
 
+  <div class="first-loading-spinner">
+    <h1>Loading Cards...</h1>
+    <div class="lds-facebook">
+      <div></div><div></div><div></div>
+    </div>
+  </div>
+
+
   <header class="drop-shadow">
     <div class="header-container full-height">
+      <div class="row full-height align-center " data-view="error">
+        <div class="flex-grow-2">
+          <h1 class="logo">YGO Like or Strike</h1>
+        </div>
+      </div>
       <div class="row full-height align-center " data-view="rating">
         <div class="flex-grow-2">
           <h1 class="logo">YGO Like or Strike</h1>
@@ -84,43 +98,82 @@
     </div>
   </header>
 
-  <main class="">
 
-    <div class="container " data-view="rating">
-      <div class="row pad-top-sm">
-        <div class="card-display text-align-center column-full">
-          <div class="row justify-center">
-            <a target="_blank" id="card-link" class="label-block drop-shadow">
-              <h2 id="card-title"></h2>
-            </a>
+
+  <main class="hidden">
+
+    <div class="container hidden" data-view="error">
+      <div class="justify-center">
+        <div class="row pad-y-med">
+          <div class="label-block drop-shadow all-cards-header">
+            <h2>
+              Error: Unable to Load Card Data.
+            </h2>
           </div>
-          <div class="row pad-y-med justify-center">
-            <div class="image-container animate__animated animate__faster">
-              <img id="card-image" src="images/placeholder.png">
+        </div>
+        <div class="row justify-center">
+          <button class="nav-big-button" data-nav="refresh">Refresh Page</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="container" data-view="rating">
+      <div class="no-cards-left hidden justify-center">
+        <div class="row pad-y-med">
+          <div class="label-block drop-shadow all-cards-header">
+            <h2>
+              No More Cards!
+            </h2>
+          </div>
+        </div>
+        <div class="row justify-center">
+          <button class="nav-big-button" data-nav="results">View your results</button>
+        </div>
+      </div>
+      <div class="full-rating-view">
+        <div class="row pad-top-sm">
+          <div class="card-display text-align-center column-full">
+            <div class="row justify-center">
+              <a target="_blank" id="card-link" class="label-block drop-shadow">
+                <h2 id="card-title"></h2>
+              </a>
+            </div>
+            <div class="row justify-center">
+              <div class="image-loading-spinner">
+                <h2>Loading Next Card...</h2>
+                <div class="lds-facebook">
+                  <div></div><div></div><div></div>
+                </div>
+              </div>
+            </div>
+            <div class="row pad-y-med justify-center">
+              <div class="image-container animate__animated animate__faster">
+                <img class="hidden" id="card-image" src="">
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div class="row justify-center rating-buttons gap-x-sm">
-        <button class="dislike-button disabled">
-          <i class="fas fa-heart-broken"></i>
-        </button>
-        <button class="like-button disabled">
-          <i class="fas fa-heart"></i>
-        </button>
-      </div>
-      <div class="row pad-y-sm justify-center">
-        <div class="column-full">
-          <div class="row justify-center">
-            <button class="new-card-button drop-shadow disabled">
-              New Card
-            </button>
-          </div>
-          <div class="row justify-center pad-top-sm">
-            <div class="label-block remaining-cards-block text-align-center drop-shadow">
-              <h3>
-                Remaining Cards: <span id="remaining-cards">0</span>
-              </h3>
+        <div class="row justify-center rating-buttons gap-x-sm">
+          <button class="dislike-button disabled">
+            <i class="fas fa-heart-broken"></i>
+          </button>
+          <button class="like-button disabled">
+            <i class="fas fa-heart"></i>
+          </button>
+        </div>
+        <div class="row pad-y-sm justify-center">
+          <div class="column-full">
+            <div class="row justify-center">
+              <button class="new-card-button drop-shadow disabled">
+                New Card
+              </button>
+            </div>
+            <div class="row justify-center pad-top-sm">
+              <div class="label-block remaining-cards-block text-align-center drop-shadow">
+                <h3>
+                  Remaining Cards: <span id="remaining-cards">0</span>
+                </h3>
+              </div>
             </div>
           </div>
         </div>
@@ -198,35 +251,22 @@
             <h3>All Cards<span class="card-count">(0)</span></h3>
           </div>
           <ul class="card-list">
-            <li class="card card-liked" data-card-id="">
-              <a href="">
-                <img class="race" src="images/iconsMD/cyberse.png" alt="">
-                <div class="card-text">
-                  <h3>Card Name</h3>
-                  <h4>Card Data</h4>
-                </div>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li data-archetype-id="0" class="archetype">
-          <button class="archetype-header">
-            Archetype Name
-            <i class="archetype-header-control fas fa-minus-square"></i>
-          </button>
-          <ul class="card-list">
-            <li class="card card-liked" data-card-id="" >
-              <a href="">
-                <img class="race" src="images/iconsMD/cyberse.png" alt="">
-                <div class="card-text">
-                  <h3>Card Name</h3>
-                  <h4>Card Data</h4>
-                </div>
-              </a>
-            </li>
           </ul>
         </li>
       </ul>
+
+      <div class="no-ratings justify-center pad-y-med">
+        <div class="row pad-y-med">
+          <div class="label-block drop-shadow all-cards-header">
+            <h2>
+              No Ratings (yet)!
+            </h2>
+          </div>
+        </div>
+        <div class="row justify-center">
+          <button class="nav-big-button" data-nav="rating">Rate some cards.</button>
+        </div>
+      </div>
     </div>
 
   </main>

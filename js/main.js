@@ -35,15 +35,30 @@ var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
 
+var $loadingSpinner = document.querySelector('.first-loading-spinner');
+var $imageLoadingSpinner = document.querySelector('.image-loading-spinner');
+
 // ? View Swapping
 function swapView(switchToView) {
   if (currentView === switchToView) {
     return;
   }
 
+  if (switchToView === 'refresh') {
+    window.location.reload();
+  }
+
   if (switchToView === 'results') {
     redrawButtons();
     rearrangeResults();
+  }
+
+  if (switchToView === 'rating') {
+    if (remainingCards.length < 1) {
+      showNoCardsLeftWarning(true);
+    } else {
+      showNoCardsLeftWarning(false);
+    }
   }
 
   for (var i = 0; i < $views.length; i++) {
@@ -72,6 +87,35 @@ for (var i = 0; i < $navLinks.length; i++) {
   });
 }
 
+// ? Handle no cards left / no ratings
+
+var $noCardsLeft = document.querySelector('.no-cards-left');
+var $fullRatingView = document.querySelector('.full-rating-view');
+function showNoCardsLeftWarning(bool) {
+  if (bool) {
+    $noCardsLeft.classList.remove('hidden');
+    $fullRatingView.classList.add('hidden');
+  } else {
+    $noCardsLeft.classList.add('hidden');
+    $fullRatingView.classList.remove('hidden');
+  }
+}
+var $noRatings = document.querySelector('.no-ratings');
+var $editButton = document.querySelector('[data-nav="editing"]');
+function showNoRatingsWarning(bool) {
+  if (bool) {
+    $noRatings.classList.remove('hidden');
+    $resultsList.classList.add('hidden');
+    $resultsOptions.classList.add('hidden');
+    $editButton.classList.add('hidden');
+  } else {
+    $noRatings.classList.add('hidden');
+    $resultsList.classList.remove('hidden');
+    $resultsOptions.classList.remove('hidden');
+    $editButton.classList.remove('hidden');
+  }
+}
+
 // ? Change loading state
 function setLoading(bool) {
   if (bool) {
@@ -88,6 +132,8 @@ function setLoading(bool) {
     $newCardButton.disabled = false;
     $likeButton.disabled = false;
     $dislikeButton.disabled = false;
+    $mainCardImage.classList.remove('hidden');
+    $imageLoadingSpinner.classList.add('hidden');
 
     $main.classList.remove('loading');
   }
@@ -99,9 +145,7 @@ function displayCard(card, animation) {
   setAnimation($imageContainer, animation);
 
   if (remainingCards.length < 1) {
-    $main.classList.remove('loading');
-    $mainCardTitle.textContent = 'No More Cards!!!';
-    $remainingCards.textContent = remainingCards.length;
+    showNoCardsLeftWarning(true);
     return;
   }
 
@@ -145,7 +189,7 @@ var motions = {
 };
 
 function clearAnimations(target) {
-  target.classList.remove('hide');
+  target.classList.remove('hidden');
   for (var m in motions) {
     target.classList.remove(motions[m]);
   }
@@ -176,7 +220,10 @@ function setAnimation(target, animation) {
 
 function animationEndHandler(event) {
   if (!event.target.classList.contains('animate__zoomIn')) {
-    event.target.classList.add('hide');
+    event.target.classList.add('hidden');
+    if (remainingCards.length > 0) {
+      $imageLoadingSpinner.classList.remove('hidden');
+    }
   }
   for (var m in motions) {
     event.target.classList.remove(motions[m]);
@@ -268,7 +315,7 @@ function updateArchetypes() {
 
 var options = {
   viewRatings: 'all',
-  viewArchetype: true,
+  viewArchetype: false,
   sortOrder: 'recent',
   set: function (option, value) {
     this[option] = value;
@@ -277,6 +324,12 @@ var options = {
 };
 
 function rearrangeResults() {
+  if (userCards.length < 1) {
+    showNoRatingsWarning(true);
+  } else {
+    showNoRatingsWarning(false);
+  }
+
   updateArchetypes();
   domUtils.removeAllChildren($resultsList);
   domUtils.removeAllChildren($allCardsList);
@@ -452,8 +505,6 @@ function toggleHeader(target, bool) {
 
 // ? Collapse All button handler
 
-//! ------------------
-
 var $collapseButton = document.querySelector('.collapse-button');
 
 function getAllVisibleArchetypes() {
@@ -494,10 +545,7 @@ $collapseButton.addEventListener('click', function () {
   }
 });
 
-//! ------------------
-
 // ? Deletion Handling
-//! =========================================================================
 var $resultsView = document.querySelector('main [data-view="results"]');
 var $selectAllButton = document.querySelector('button.select-all-button');
 
@@ -605,8 +653,8 @@ function deleteUserCard(card) {
   userCards.splice(indexOfCardToDelete, 1);
   remainingCards.unshift(cardToReplace);
   updateArchetypes();
+  drawNewCard();
 }
-//! =========================================================================
 
 // ? Site Initialization
 
@@ -615,10 +663,11 @@ swapView(currentView);
 // ? initializeSite() runs after data loads in.
 /* exported initializeSite */
 function initializeSite() {
-  $main.classList.remove('hidden');
   setLoading(true);
   rearrangeResults();
   resultsOrder('reverse');
   swapView('rating');
   drawNewCard();
+  $main.classList.remove('hidden');
+  $loadingSpinner.classList.add('hidden');
 }
