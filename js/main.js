@@ -44,6 +44,10 @@ function swapView(switchToView) {
     return;
   }
 
+  if (switchToView === 'refresh') {
+    window.location.reload();
+  }
+
   if (switchToView === 'results') {
     redrawButtons();
     rearrangeResults();

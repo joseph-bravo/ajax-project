@@ -57,6 +57,11 @@
 
   <header class="drop-shadow">
     <div class="header-container full-height">
+      <div class="row full-height align-center " data-view="error">
+        <div class="flex-grow-2">
+          <h1 class="logo">YGO Like or Strike</h1>
+        </div>
+      </div>
       <div class="row full-height align-center " data-view="rating">
         <div class="flex-grow-2">
           <h1 class="logo">YGO Like or Strike</h1>
@@ -96,6 +101,21 @@
 
 
   <main class="hidden">
+
+    <div class="container hidden" data-view="error">
+      <div class="justify-center">
+        <div class="row pad-y-med">
+          <div class="label-block drop-shadow all-cards-header">
+            <h2>
+              Error: Unable to Load Card Data.
+            </h2>
+          </div>
+        </div>
+        <div class="row justify-center">
+          <button class="nav-big-button" data-nav="refresh">Refresh Page</button>
+        </div>
+      </div>
+    </div>
 
     <div class="container" data-view="rating">
       <div class="no-cards-left hidden justify-center">
