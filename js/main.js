@@ -49,6 +49,14 @@ function swapView(switchToView) {
     rearrangeResults();
   }
 
+  if (switchToView === 'rating') {
+    if (remainingCards.length < 1) {
+      showNoCardsLeftWarning(true);
+    } else {
+      showNoCardsLeftWarning(false);
+    }
+  }
+
   for (var i = 0; i < $views.length; i++) {
     if ($views[i].dataset.view === switchToView) {
       $views[i].classList.remove('hidden');
@@ -73,6 +81,35 @@ for (var i = 0; i < $navLinks.length; i++) {
   $navLinks[i].addEventListener('click', function (event) {
     swapView(event.target.dataset.nav);
   });
+}
+
+// ? Handle no cards left / no ratings
+
+var $noCardsLeft = document.querySelector('.no-cards-left');
+var $fullRatingView = document.querySelector('.full-rating-view');
+function showNoCardsLeftWarning(bool) {
+  if (bool) {
+    $noCardsLeft.classList.remove('hidden');
+    $fullRatingView.classList.add('hidden');
+  } else {
+    $noCardsLeft.classList.add('hidden');
+    $fullRatingView.classList.remove('hidden');
+  }
+}
+var $noRatings = document.querySelector('.no-ratings');
+var $editButton = document.querySelector('[data-nav="editing"]');
+function showNoRatingsWarning(bool) {
+  if (bool) {
+    $noRatings.classList.remove('hidden');
+    $resultsList.classList.add('hidden');
+    $resultsOptions.classList.add('hidden');
+    $editButton.classList.add('hidden');
+  } else {
+    $noRatings.classList.add('hidden');
+    $resultsList.classList.remove('hidden');
+    $resultsOptions.classList.remove('hidden');
+    $editButton.classList.remove('hidden');
+  }
 }
 
 // ? Change loading state
@@ -104,9 +141,7 @@ function displayCard(card, animation) {
   setAnimation($imageContainer, animation);
 
   if (remainingCards.length < 1) {
-    $main.classList.remove('loading');
-    $mainCardTitle.textContent = 'No More Cards!!!';
-    $remainingCards.textContent = remainingCards.length;
+    showNoCardsLeftWarning(true);
     return;
   }
 
@@ -285,6 +320,12 @@ var options = {
 };
 
 function rearrangeResults() {
+  if (userCards.length < 1) {
+    showNoRatingsWarning(true);
+  } else {
+    showNoRatingsWarning(false);
+  }
+
   updateArchetypes();
   domUtils.removeAllChildren($resultsList);
   domUtils.removeAllChildren($allCardsList);
@@ -460,8 +501,6 @@ function toggleHeader(target, bool) {
 
 // ? Collapse All button handler
 
-//! ------------------
-
 var $collapseButton = document.querySelector('.collapse-button');
 
 function getAllVisibleArchetypes() {
@@ -502,10 +541,7 @@ $collapseButton.addEventListener('click', function () {
   }
 });
 
-//! ------------------
-
 // ? Deletion Handling
-//! =========================================================================
 var $resultsView = document.querySelector('main [data-view="results"]');
 var $selectAllButton = document.querySelector('button.select-all-button');
 
@@ -613,8 +649,8 @@ function deleteUserCard(card) {
   userCards.splice(indexOfCardToDelete, 1);
   remainingCards.unshift(cardToReplace);
   updateArchetypes();
+  drawNewCard();
 }
-//! =========================================================================
 
 // ? Site Initialization
 
