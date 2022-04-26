@@ -35,6 +35,9 @@ var $navLinks = document.querySelectorAll('[data-nav]');
 
 var currentView = '';
 
+var $loadingSpinner = document.querySelector('.first-loading-spinner');
+var $imageLoadingSpinner = document.querySelector('.image-loading-spinner');
+
 // ? View Swapping
 function swapView(switchToView) {
   if (currentView === switchToView) {
@@ -88,6 +91,8 @@ function setLoading(bool) {
     $newCardButton.disabled = false;
     $likeButton.disabled = false;
     $dislikeButton.disabled = false;
+    $mainCardImage.classList.remove('hidden');
+    $imageLoadingSpinner.classList.add('hidden');
 
     $main.classList.remove('loading');
   }
@@ -145,7 +150,7 @@ var motions = {
 };
 
 function clearAnimations(target) {
-  target.classList.remove('hide');
+  target.classList.remove('hidden');
   for (var m in motions) {
     target.classList.remove(motions[m]);
   }
@@ -176,7 +181,10 @@ function setAnimation(target, animation) {
 
 function animationEndHandler(event) {
   if (!event.target.classList.contains('animate__zoomIn')) {
-    event.target.classList.add('hide');
+    event.target.classList.add('hidden');
+    if (remainingCards.length > 0) {
+      $imageLoadingSpinner.classList.remove('hidden');
+    }
   }
   for (var m in motions) {
     event.target.classList.remove(motions[m]);
@@ -615,10 +623,11 @@ swapView(currentView);
 // ? initializeSite() runs after data loads in.
 /* exported initializeSite */
 function initializeSite() {
-  $main.classList.remove('hidden');
   setLoading(true);
   rearrangeResults();
   resultsOrder('reverse');
   swapView('rating');
   drawNewCard();
+  $main.classList.remove('hidden');
+  $loadingSpinner.classList.add('hidden');
 }
