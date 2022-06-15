@@ -632,9 +632,7 @@ $deleteConfirmationModal.addEventListener('click', function (event) {
     return;
   }
   if (event.target.matches('button.yes')) {
-    toDelete.forEach(function (element) {
-      deleteUserCard(element);
-    });
+    deleteUserCards(toDelete);
     toDelete = [];
     swapView('results');
     $deleteConfirmationModal.close();
@@ -644,14 +642,22 @@ $deleteConfirmationModal.addEventListener('click', function (event) {
   }
 });
 
-function deleteUserCard(card) {
-  var indexOfDataToDelete = userData.ratings.indexOf(userData.ratings.find(function (element) { return element.id === card.id; }));
-  userData.ratings.splice(indexOfDataToDelete);
-
-  var indexOfCardToDelete = userCards.indexOf(userCards.find(function (element) { return element === card; }));
-  var cardToReplace = rawData.find(function (element) { return element.id === card.id; });
-  userCards.splice(indexOfCardToDelete, 1);
-  remainingCards.unshift(cardToReplace);
+function deleteUserCards(cards) {
+  const deletingIds = cards.map(e => e.id);
+  // eslint-disable-next-line no-global-assign
+  userCards = userCards.filter(e => {
+    if (deletingIds.includes(e.id)) {
+      remainingCards.unshift(rawData.find(card => card.id === e.id));
+      return false;
+    }
+    return true;
+  });
+  userData.ratings = userData.ratings.filter(e => {
+    if (deletingIds.includes(e.id)) {
+      return false;
+    }
+    return true;
+  });
   updateArchetypes();
   drawNewCard();
 }
