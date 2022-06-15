@@ -14,7 +14,7 @@
 }
 
 .header-container {
-  width: clamp(0px, 90%, 600px);
+  width: clamp(0px, 90%, 768px);
   margin: 0 auto;
 }
 
@@ -111,7 +111,7 @@
 
 /** Media Rules */
 
-@media only screen and (min-width: 800px) {
+@media only screen and (min-width: 768px) {
   .column-break-half,
   .column-break-half-half {
     flex: 1;
