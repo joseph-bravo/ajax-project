@@ -6,9 +6,7 @@ A web application for Yu-Gi-Oh! players who want to check their taste in cards.
 
 There are a bunch of Yu-Gi-Oh! (YGO) Monster Cards out there! I figured it'd be fun to _like or strike_ each and every one of them. There's a lot of attractive ones, ugly ones, and many in between!
 
-<center>
-<a href="https://joseph-bravo.github.io/ygo-like-or-strike/"><h1>Try it out here!</h1></a>
-</center>
+# [Try it out here!](https://joseph-bravo.github.io/ygo-like-or-strike/)
 
 ---
 
