@@ -12,7 +12,9 @@ There are a bunch of Yu-Gi-Oh! (YGO) Monster Cards out there! I figured it'd be 
 
 # Previews
 
-> ### [TODO]
+![rating-screen](https://user-images.githubusercontent.com/78003700/173964034-c0486365-f7ee-43b8-85f6-30c0953b88e5.gif)
+![ezgif com-gif-maker (17)](https://user-images.githubusercontent.com/78003700/173964091-5a4f2545-8a6c-4f7c-931d-05226ebf0d11.gif)
+
 
 ---
 
